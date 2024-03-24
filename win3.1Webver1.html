@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="img/icon-16x16.png"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="img/icon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="96x96" href="img/icon-96x96.png"/>
+    <link rel="stylesheet" href="style.css"/>
+    <script src="https://kit.fontawesome.com/63535dd4e0.js"></script>
+    <script defer src="script.js"></script>
+    <style>
+@font-face {
+            font-family: "Windows Regular";
+             src: url("https://raw.githubusercontent.com/karol-kiersnowski/win31/master/Windows Regular.ttf");
+        }
+        
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            cursor: default;
+            font-family: "Windows Regular", Arial, sans-serif;
+        }
+        
+        :focus {
+            outline: none;
+        }
+        
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        
+        #start-screen {
+            position: absolute;
+            z-index: 5;
+            padding: 20px;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            text-align: center;
+        }
+        
+            #start-screen img {
+                height: 100%;
+            }
+        
+        #desktop {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #c3c7cb;
+        }
+        
+            #icon-fullscreen {
+                position: absolute;
+                bottom: 10px;
+                left: 10px;
+            }
+        
+                #icon-fullscreen .icon-button {
+                    margin-left: auto;
+                    margin-right: auto;
+                    width: 32px;
+                    height: 32px;
+                    border: 2px outset;
+                    box-shadow: 1px 0px #000, 0px 1px #000, -1px 0px #000, 0px -1px #000;
+                    font-size: 22px;
+                    text-shadow: -1px -1px #fff;
+                }
+        
+                #icon-fullscreen .icon-caption {
+                    margin: 2px 0;
+                }
+        
+        .modal-window {
+            position: absolute;
+            z-index: 999;
+            min-width: 200px;
+            min-height: 100px;
+            border: 4px solid #00a;
+            background-color: #00a;
+            text-align: center;
+        }
+        
+        .window,
+        .window-with-menu-bar {
+            position: absolute;
+            z-index: 1;
+            min-width: 200px;
+            min-height: 100px;
+            resize: both;
+            overflow: hidden;
+            border: 4px double #000;
+            background-color: #c3c7cb;
+        }
+        
+            .title-bar {
+                position: relative;
+                height: 21px;
+                border-bottom: 1px solid #000;
+                background-color: #fff;
+                color: #000;
+                text-align: center;
+            }
+        
+            .window:focus-within .title-bar,
+            .window-with-menu-bar:focus-within .title-bar {
+                background-color: #00a;
+                color: #fff;
+            }
+        
+                .title {
+                    padding: 1px;
+                    font-size: 14px;
+                    font-weight: bold;
+                }
+        
+                hr {
+                    margin: 2px 0;
+                    border: none;
+                    border-top: 1px solid #000;
+                }
+        
+                .control-menu-box {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 20px;
+                    height: 20px;
+                    border-right: 1px solid #000;
+                    background-color: #c3c7cb;
+                    color: #fff;
+                    text-shadow:
+                        -1px -1px 0 #000,
+                        -1px 0px 0 #000,
+                        -1px 1px 0 #000,
+                        1px -1px 0 #000,
+                        1px 0px 0 #000,
+                        1px 1px 0 #000,
+                        2px 2px 0 #868a8e;
+                }
+        
+                .control-menu:active .control-menu-box,
+                .control-menu:focus .control-menu-box {
+                    background-color: #868a8e;
+                }
+        
+                    .control-menu:focus-within .menu-list {
+                        display: block;
+                        top: 22px;
+                        margin: -2px 0;
+                        text-align: left;
+                        text-shadow: none;
+                    }
+        
+                .minimize-box,
+                .maximize-box {
+                    position: absolute;
+                    top: 0;
+                    border-left: 1px solid #000;
+                    background-color: #c3c7cb;
+                    color: #000;
+                    font-size: 11px;
+                }
+        
+                .minimize-box {
+                    right: 21px;
+                }
+        
+                .maximize-box {
+                    right: 0;
+                }
+        
+                    .minimize-button,
+                    .maximize-button {
+                        width: 20px;
+                        height: 20px;
+                        border: 1px outset;
+                    }
+        
+                    .minimize-button:active,
+                    .maximize-button:active {
+                        border: 2px inset;
+                    }
+        
+                        .minimize-button i {
+                            vertical-align: top;
+                        }
+        
+                        .maximize-button i {
+                            vertical-align: bottom;
+                        }
+        
+            .menu-bar {
+                border-bottom: 1px solid #000;
+                background-color: #fff;
+                font-size: 14px;
+            }
+        
+                .menu-name {
+                    display: inline-block;
+                    padding: 0 5px;
+                    /*background-color: green;*/
+                }
+        
+                .menu-name:focus {
+                    background-color: #00a;
+                    color: #fff;
+                }
+        
+                    .menu-list {
+                        display: none;
+                        position: absolute;
+                        z-index: 3;
+                        margin: 0 -5px;
+                        border: 1px solid #000;
+                        background-color: #fff;
+                        color: #000;
+                        white-space: nowrap;
+                    }
+        
+                    .menu-name:focus .menu-list {
+                        display: block;
+                    }
+        
+                        .menu-command {
+                            padding: 0 1em;
+                        }
+        
+                        .menu-command:active {
+                            background-color: #00a;
+                            color: #fff;
+                        }
+        
+            .window-content {
+                position: relative;
+                width: 100%;
+                background-color: #fff;
+                overflow: auto;
+                scrollbar-width: thin;
+                scrollbar-color: #c3c7cb #fff;
+            }
+        
+            .window-with-menu-bar .window-content {
+                //padding: 5px;
+                height: calc(100% - 42px);
+                overflow: auto;
+            }
+        
+            .window .window-content {
+                height: calc(100% - 22px);
+                overflow: auto;
+            }
+        
+                .window-content textarea {
+                    box-sizing: content-box;
+                    width: calc(100% - 5px);
+                    height: calc(100% - 5px);
+                    resize: none;
+                    user-select: text;
+                    cursor: text;
+                }
+        
+                .window-content .icon-container {
+                    position: relative;
+                    top: 200px;
+                }
+        
+                    .icon {
+                        display: inline-block;
+                        position: relative;
+                        margin: 2px 2px;
+                        width: 64px;
+                        text-align: center;
+                    }
+        
+                        .icon img {
+                            display: block;
+                            margin-bottom: 2px;
+                            margin-left: auto;
+                            margin-right: auto;
+                        }
+        
+                        .icon-caption {
+                            display: inline-block;
+                            margin: 0;
+                            padding: 0px 2px;
+                            font-size: 12px;
+                            line-height: 14px;
+                            white-space: nowrap;
+                            vertical-align: top;
+                        }
+        
+                        .icon:focus .icon-caption {
+                            background-color: #00a;
+                            color: #fff;
+                        }
+        
+                button {
+                    margin: 10px 20px;
+                    width: 75px;
+                    background-color: #c3c7cb;
+                    color: #000;
+                    border-style: outset;
+                    border-radius: 1px;
+                    box-shadow: 0 0 0 1px #000;
+                    font-size: 14px;
+                }
+        
+                button:active {
+                    border-style: inset;
+                }
+        
+        
+                p {
+                    margin: 5px;
+                }
+        
+        
+        
+        .disabled {
+            opacity: 0.25;
+        }
+        
+        .clear {
+            clear: both;
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        #window-exit-windows {
+            display: none;
+            z-index: 999;
+            top: calc(50% - 68px);
+            left: calc(50% - 160px);
+            height: 137px;
+            width: 320px;
+            border: 4px solid #00a;
+            background-color: #00a;
+            text-align: center;
+        }
+        
+            #window-exit-windows .title-bar {
+                border: 1px solid #fff;
+                border-bottom: 1px solid #000;
+                background-color: #00a;
+                color: #fff;
+            }
+        
+                #window-exit-windows .title-bar {
+                    
+                }
+        
+            #window-exit-windows .window-content {
+        
+            }
+        
+                #window-exit-windows .window-content i {
+                    color: #00a;
+                    vertical-align: middle;
+                    font-size: 34px;
+                }
+        
+                #window-exit-windows .window-content span {
+                    vertical-align: middle;
+                    font-size: 14px;
+                }
+        
+        
+        
+        #window-program-manager {
+            z-index: 1;
+            top: calc(50% - 160px);
+            left: calc(50% - 250px);
+            height: 320px;
+            width: 500px;
+        }
+        
+        #window-program-manager-main {
+            z-index: 2;
+            top: calc(50% - 175px + 60px);
+            left: calc(50% - 250px + 10px);
+            height: 200px;
+            width: 400px;
+        }
+        
+        #window-program-manager-accessories {
+            display: none;
+            top: calc(50% - 175px + 60px);
+            left: calc(50% - 250px + 10px);
+            height: 200px;
+            width: 400px;
+        }
+        
+            #window-program-manager-accessories .window-content {
+                overflow-y: auto;
+            }
+        
+        #window-program-manager-games {
+            display: none;
+            top: calc(50% - 175px + 60px);
+            left: calc(50% - 250px + 10px);
+            /*height: 200px;
+            width: 400px;*/
+        }
+        
+        #window-program-manager-startup {
+            display: none;
+            top: calc(50% - 175px + 60px);
+            left: calc(50% - 250px + 10px);
+            height: 200px;
+            width: 400px;
+        }
+        
+        #window-program-manager-applications {
+            display: none;
+            top: calc(50% - 175px + 60px);
+            left: calc(50% - 250px + 10px);
+            height: 200px;
+            width: 400px;
+        }
+        
+        #window-msdos {
+            display: none;
+            top: calc(50% - 175px);
+            bottom: calc(50% - 175px);
+            left: calc(50% - 250px);
+            right: calc(50% - 250px);
+            width: 500px;
+            height: 350px;
+            resize: none;
+        }
+        
+            #window-msdos iframe {
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
+        
+        #window-notepad {
+            display: none;
+            top: calc(50% - 75px);
+            /*bottom: calc(50% - 175px);*/
+            left: calc(50% - 150px);
+            /*right: calc(50% - 250px);*/
+            /*width: 500px;
+            height: 350px;*/
+        }
+        
+        #window-write {
+            display: none;
+            top: calc(50% - 240px);
+            /*bottom: calc(50% - 175px);*/
+            left: calc(50% - 320px);
+            /*right: calc(50% - 250px);*/
+            height: 480px;
+            width: 640px;
+        }
+    </style>
+
+    <title>Windows 3.1</title>
+    <meta name="description" content="Windows 3.1 Simulator - it's just a toy"/>
+    <meta name="keywords" content="Windows, Win, Windows 3.1, Windows31, Win 3.1, Win3.1, Win31, simulator"/>
+</head>
+<body onload="init()">
+
+    <div id="start-screen" onclick="startWindowsSession()">
+        <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/start-screen.png"/>
+    </div>
+
+
+
+    <div id="desktop" onmousemove="tryMoveElement(event)" tabindex="0">
+
+        <div class="icon" id="icon-fullscreen" tabindex="0" draggable="true" ondblclick="switchScreenMode(this)">
+            <div class="icon-button">
+                <i class="fa fa-expand"></i>
+            </div>
+            <div class="icon-caption">Fullscreen<br>mode</div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="modal-window" id="window-exit-windows" tabindex="0">
+            <div class="title-bar">
+                <div class="control-menu" tabindex="0">
+                    <div class="control-menu-box" ondblclick="closeWindow(this)">&ndash;</div>
+                    <div class="menu-list">
+                        <div class="menu-command disabled"><u>M</u>ove...</div>
+                        <div class="menu-command" onclick="closeWindow(this)"><u>C</u>lose</div>
+                    </div>
+            </div>
+                <div class="title">Exit Windows</div>
+            </div>
+            <div class="window-content" style="padding: 10px;">
+                <p>
+                    <i class="fas fa-info-circle"></i>
+                    <span>This will end your Windows session.</span>
+                </p>
+                <button id="button-ok" onclick="exitWindowsSession()">OK</button>
+                <button onclick="closeWindow(this)">Cancel</button>
+            </div>
+        </div> <!-- .WINDOW #WINDOW-EXIT-WINDOWS -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="window-with-menu-bar" id="window-program-manager" onmousedown="clickOnWindow(this)" tabindex="0">
+            <div class="title-bar">
+                <div class="control-menu" tabindex="0">
+                    <div class="control-menu-box" ondblclick="showWindowExitWindows()">&ndash;</div>
+                    <div class="menu-list">
+                        <div class="menu-command disabled" onclick="maximizeWindow(this)"><u>R</u>estore</div>
+                        <div class="menu-command"><u>M</u>ove...</div>
+                        <div class="menu-command"><u>S</u>ize</div>
+                        <div class="menu-command">Mi<u>n</u>imize</div>
+                        <div class="menu-command" onclick="maximizeWindow(this)">Ma<u>x</u>imize</div>
+                        <hr>
+                        <div class="menu-command" onclick="showWindowExitWindows()"><u>C</u>lose</div>
+                        <hr>
+                        <div class="menu-command">S<u>w</u>itch to...</div>
+                    </div>
+                </div>
+                <div class="title"
+                    ondblclick="maximizeWindow(this);" 
+                    onmousedown="setMouseDown(this, event)"
+                    onmouseup="setMouseUp(this)">
+                    Program Manager
+                </div>
+                <div class="minimize-box">
+                    <div class="minimize-button" onclick="showWindowExitWindows()">
+                        <i class="fas fa-sort-down"></i>
+                    </div>
+                </div>
+                <div class="maximize-box">
+                    <div class="maximize-button" onclick="maximizeWindow(this)">
+                        <i class="fas fa-sort-up"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-bar">
+                <div class="menu-name" tabindex="0">
+                    <u>F</u>ile
+                    <div class="menu-list">
+                        <div class="menu-command"><u>N</u>ew</div>
+                        <div class="menu-command"><u>O</u>pen...</div>
+                        <div class="menu-command"><u>M</u>ove</div>
+                        <div class="menu-command"><u>C</u>opy</div>
+                        <div class="menu-command"><u>D</u>elete</div>
+                        <div class="menu-command"><u>P</u>roperties...</div>
+                        <hr>
+                        <div class="menu-command"><u>R</u>un...</div>
+                        <hr>
+                        <div class="menu-command" onclick="showWindowExitWindows()">E<u>x</u>it Windows...</div>
+                    </div>
+                </div><div class="menu-name" tabindex="0">
+                    <u>O</u>ptions
+                    <div class="menu-list">
+                        <div class="menu-command"><u>A</u>uto Arrange</div>
+                        <div class="menu-command"><u>M</u>inimize on Use</div>
+                        <div class="menu-command"><u>S</u>ave Settings on Exit</div>
+                    </div>
+                </div><div class="menu-name" tabindex="0">
+                    <u>W</u>indow
+                    <div class="menu-list">
+                        <div class="menu-command"><u>C</u>ascade</div>
+                        <div class="menu-command"><u>T</u>ile</div>
+                        <div class="menu-command"><u>A</u>rrange Icons</div>
+                        <hr>
+                        <div class="menu-command"><u>1</u> Games</div>
+                        <div class="menu-command"><u>2</u> StartUp</div>
+                        <div class="menu-command"><u>3</u> Applications</div>
+                        <div class="menu-command"><u>4</u> Main</div>
+                        <div class="menu-command"><u>5</u> Accessories</div>
+                    </div>
+                </div><div class="menu-name" tabindex="0">
+                    <u>H</u>elp
+                    <div class="menu-list">
+                        <div class="menu-command"><u>C</u>ontents</div>
+                        <div class="menu-command"><u>S</u>earch for Help on...</div>
+                        <hr>
+                        <div class="menu-command"><u>H</u>ow to Use Help</div>
+                        <div class="menu-command"><u>W</u>indows Tutorial</div>
+                        <hr>
+                        <div class="menu-command"><u>A</u>bout Program Manager...</div>
+                    </div>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="icon-container">
+                    <div class="icon" id="icon-msdos" tabindex="0" draggable="true" ondblclick="runApp(programManagerAccessories)">
+                        <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/group.png"/>
+                        <div class="icon-caption">Accessories</div>
+                    </div>
+                    <div class="icon" id="icon-msdos" tabindex="0" draggable="true" ondblclick="runApp(programManagerGames)">
+                        <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/group.png"/>
+                        <div class="icon-caption">Games</div>
+                    </div>
+                    <div class="icon" id="icon-msdos" tabindex="0" draggable="true" ondblclick="runApp(programManagerStartup)">
+                        <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/group.png"/>
+                        <div class="icon-caption">StartUp</div>
+                    </div>
+                    <div class="icon" id="icon-msdos" tabindex="0" draggable="true" ondblclick="runApp(programManagerApplications)">
+                        <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/group.png"/>
+                        <div class="icon-caption">Applications</div>
+                    </div>
+                    <div class="icon" id="icon-msdos" tabindex="0" draggable="true" ondblclick="runApp(programManagerMain)">
+                        <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/group.png"/>
+                        <div class="icon-caption">Main</div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- .WINDOW #WINDOW-PROGRAM-MANAGER -->
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="window" id="window-program-manager-main" onmousedown="clickOnWindow(this)" tabindex="0">
+            <div class="title-bar">
+                <div class="control-menu" tabindex="0">
+                    <div class="control-menu-box" ondblclick="closeWindow(this)">&ndash;</div>
+                    <div class="menu-list">
+                        <div class="menu-command disabled" onclick="maximizeWindow(this)"><u>R</u>estore</div>
+                        <div class="menu-command"><u>M</u>ove...</div>
+                        <div class="menu-command"><u>S</u>ize</div>
+                        <div class="menu-command">Mi<u>n</u>imize</div>
+                        <div class="menu-command" onclick="maximizeWindow(this)">Ma<u>x</u>imize</div>
+                        <hr>
+                        <div class="menu-command" onclick="closeWindow(this)"><u>C</u>lose</div>
+                        <hr>
+                        <div class="menu-command">S<u>w</u>itch to...</div>
+                    </div>
+                </div>
+                <div class="title"
+                    ondblclick="maximizeWindow(this)"
+                    onmousedown="setMouseDown(this, event)"
+                    onmouseup="setMouseUp(this)">
+                    Main
+                </div>
+                <div class="minimize-box">
+                    <div class="minimize-button" onclick="closeWindow(this)">
+                        <i class="fas fa-sort-down"></i>
+                    </div>
+                </div>
+                <div class="maximize-box">
+                    <div class="maximize-button" onclick="maximizeWindow(this)">
+                        <i class="fas fa-sort-up"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="icon" id="icon-msdos" tabindex="0" draggable="true"><!--  ondragover="dragstart(this, event)"> -->
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/main/file-manager.png"/>
+                    <div class="icon-caption">File Manager</div>
+                </div>
+                <div class="icon" id="icon-msdos" tabindex="0" draggable="true">
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/main/control-panel.png"/>
+                    <div class="icon-caption">Control Panel</div>
+                </div>
+                <div class="icon" id="icon-msdos" tabindex="0" draggable="true">
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/main/print-manager.png"/>
+                    <div class="icon-caption">Print Manager</div>
+                </div>
+                <div class="icon" id="icon-msdos" tabindex="0" draggable="true">
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/main/clipboard-viewer.png"/>
+                    <div class="icon-caption">Clipboard<br>Viewer</div>
+                </div>
+                <div class="icon" id="icon-msdos" tabindex="0" draggable="true" ondblclick="runApp(msdos)">
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/main/ms-dos.png"/>
+                    <div class="icon-caption">MS-DOS<br>Prompt</div>
+                </div>
+                <div class="icon" id="icon-msdos" tabindex="0" draggable="true">
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/main/windows-setup.png"/>
+                    <div class="icon-caption">Windows<br>Setup</div>
+                </div>
+                <div class="icon" id="icon-msdos" tabindex="0" draggable="true"
+                ondblclick="">
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/main/pif-editor.png"/>
+                    <div class="icon-caption">PIF Editor</div>
+                </div>
+                <div class="icon" id="icon-write" tabindex="0" draggable="true" ondblclick="runApp(writeApp)">
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/accessories/write.png"/>
+                    <div class="icon-caption">Read Me</div>
+                </div>
+            </div>
+        </div><!-- .WINDOW #WINDOW-PROGRAM-MANAGER-MAIN -->
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="window" id="window-program-manager-accessories" onmousedown="clickOnWindow(this)" tabindex="0">
+            <div class="title-bar">
+                <div class="control-menu" tabindex="0">
+                    <div class="control-menu-box" ondblclick="closeWindow(this)">&ndash;</div>
+                    <div class="menu-list">
+                        <div class="menu-command disabled" onclick="maximizeWindow(this)"><u>R</u>estore</div>
+                        <div class="menu-command"><u>M</u>ove...</div>
+                        <div class="menu-command"><u>S</u>ize</div>
+                        <div class="menu-command">Mi<u>n</u>imize</div>
+                        <div class="menu-command" onclick="maximizeWindow(this)">Ma<u>x</u>imize</div>
+                        <hr>
+                        <div class="menu-command" onclick="closeWindow(this)"><u>C</u>lose</div>
+                        <hr>
+                        <div class="menu-command">S<u>w</u>itch to...</div>
+                    </div>
+                </div>
+                <div class="title"
+                    ondblclick="maximizeWindow(this)"
+                    onmousedown="setMouseDown(this, event)"
+                    onmouseup="setMouseUp(this)">
+                    Accessories
+                </div>
+                <div class="minimize-box">
+                    <div class="minimize-button" onclick="closeWindow(this)">
+                        <i class="fas fa-sort-down"></i>
+                    </div>
+                </div>
+                <div class="maximize-box">
+                    <div class="maximize-button" onclick="maximizeWindow(this)">
+                        <i class="fas fa-sort-up"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="icon" draggable="true" id="icon-write" tabindex="0" ondblclick="runApp(writeApp)">
+                    <img draggable="false" src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/accessories/write.png"/>
+                    <div class="icon-caption">Write</div>
+                </div>
+                <div class="icon" id="icon-write" tabindex="0">
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/accessories/paintbrush.png"/>
+                    <div class="icon-caption">Paintbrush</div>
+                </div>
+                <div class="icon" id="icon-write" tabindex="0">
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/accessories/terminal.png"/>
+                    <div class="icon-caption">Terminal</div>
+                </div>
+                <div class="icon" id="icon-notepad" tabindex="0" ondblclick="runApp(notepad)">
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/accessories/notepad.png"/>
+                    <div class="icon-caption">Notepad</div>
+                </div>
+                <div class="icon" id="icon-write" tabindex="0">
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/accessories/recorder.png"/>
+                    <div class="icon-caption">Recorder</div>
+                </div>
+                <div class="icon" id="icon-write" tabindex="0">
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/accessories/cardfile.png"/>
+                    <div class="icon-caption">Cardfile</div>
+                </div>
+                <div class="icon" id="icon-write" tabindex="0">
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/accessories/calculator.png"/>
+                    <div class="icon-caption">Calculator</div>
+                </div>
+                <div class="icon" id="icon-write" tabindex="0">
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/accessories/clock.png"/>
+                    <div class="icon-caption">Clock</div>
+                </div>
+                <div class="icon" id="icon-write" tabindex="0">
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/accessories/object-packager.png"/>
+                    <div class="icon-caption">Object<br>Packager</div>
+                </div>
+                <div class="icon" id="icon-write" tabindex="0">
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/accessories/character-map.png"/>
+                    <div class="icon-caption">Character Map</div>
+                </div>
+                <div class="icon" id="icon-write" tabindex="0">
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/accessories/media-player.png"/>
+                    <div class="icon-caption">Media Player</div>
+                </div>
+                <div class="icon" id="icon-write" tabindex="0">
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/accessories/sound-recorder.png"/>
+                    <div class="icon-caption">Sound<br>Recorder</div>
+                </div>
+            </div>
+        </div><!-- .WINDOW #WINDOW-PROGRAM-MANAGER-ACCESSORIES -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="window" id="window-program-manager-games" onmousedown="clickOnWindow(this)" tabindex="0">
+            <div class="title-bar">
+                <div class="control-menu" tabindex="0">
+                    <div class="control-menu-box" ondblclick="closeWindow(this)">&ndash;</div>
+                    <div class="menu-list">
+                        <div class="menu-command disabled" onclick="maximizeWindow(this)"><u>R</u>estore</div>
+                        <div class="menu-command"><u>M</u>ove...</div>
+                        <div class="menu-command"><u>S</u>ize</div>
+                        <div class="menu-command">Mi<u>n</u>imize</div>
+                        <div class="menu-command" onclick="maximizeWindow(this)">Ma<u>x</u>imize</div>
+                        <hr>
+                        <div class="menu-command" onclick="closeWindow(this)"><u>C</u>lose</div>
+                        <hr>
+                        <div class="menu-command">S<u>w</u>itch to...</div>
+                    </div>
+                </div>
+                <div class="title"
+                    ondblclick="maximizeWindow(this)"
+                    onmousedown="setMouseDown(this, event)"
+                    onmouseup="setMouseUp(this)">
+                    Games
+                </div>
+                <div class="minimize-box">
+                    <div class="minimize-button" onclick="closeWindow(this)">
+                        <i class="fas fa-sort-down"></i>
+                    </div>
+                </div>
+                <div class="maximize-box">
+                    <div class="maximize-button" onclick="maximizeWindow(this)">
+                        <i class="fas fa-sort-up"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="icon" id="icon-msdos" tabindex="0">
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/games/solitaire.png"/>
+                    <div class="icon-caption">Solitaire</div>
+                </div>
+                <div class="icon" id="icon-msdos" tabindex="0">
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/games/minesweeper.png"/>
+                    <div class="icon-caption">Minesweeper</div>
+                </div>
+                <div class="icon" id="icon-msdos" tabindex="0">
+                    <img src="https://raw.githubusercontent.com/karol-kiersnowski/win31/master/img/games/hearts.png"/>
+                    <div class="icon-caption">Hearts</div>
+                </div>
+            </div>
+        </div><!-- .WINDOW #WINDOW-PROGRAM-MANAGER-GAMES -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="window" id="window-program-manager-startup" onmousedown="clickOnWindow(this)" tabindex="0">
+            <div class="title-bar">
+                <div class="control-menu" tabindex="0">
+                    <div class="control-menu-box" ondblclick="closeWindow(this)">&ndash;</div>
+                    <div class="menu-list">
+                        <div class="menu-command disabled" onclick="maximizeWindow(this)"><u>R</u>estore</div>
+                        <div class="menu-command"><u>M</u>ove...</div>
+                        <div class="menu-command"><u>S</u>ize</div>
+                        <div class="menu-command">Mi<u>n</u>imize</div>
+                        <div class="menu-command" onclick="maximizeWindow(this)">Ma<u>x</u>imize</div>
+                        <hr>
+                        <div class="menu-command" onclick="closeWindow(this)"><u>C</u>lose</div>
+                        <hr>
+                        <div class="menu-command">S<u>w</u>itch to...</div>
+                    </div>
+                </div>
+                <div class="title"
+                    ondblclick="maximizeWindow(this)"
+                    onmousedown="setMouseDown(this, event)"
+                    onmouseup="setMouseUp(this)">
+                    StartUp
+                </div>
+                <div class="minimize-vertical-line"></div>
+                <div class="minimize-button" onclick="closeWindow(this)">
+                    <i class="fas fa-sort-down"></i>
+                </div>
+                <div class="maximize-vertical-line"></div>
+                <div class="maximize-button" onclick="maximizeWindow(this)">
+                    <i class="fas fa-sort-up"></i>
+                </div>
+            </div>
+            <div class="window-content">
+
+            </div>
+        </div><!-- .WINDOW #WINDOW-PROGRAM-MANAGER-STARTUP -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="window" id="window-program-manager-applications" onmousedown="clickOnWindow(this)" tabindex="0">
+            <div class="title-bar">
+                <div class="control-menu" tabindex="0">
+                    <div class="control-menu-box" ondblclick="closeWindow(this)">&ndash;</div>
+                    <div class="menu-list">
+                        <div class="menu-command disabled" onclick="maximizeWindow(this)"><u>R</u>estore</div>
+                        <div class="menu-command"><u>M</u>ove...</div>
+                        <div class="menu-command"><u>S</u>ize</div>
+                        <div class="menu-command">Mi<u>n</u>imize</div>
+                        <div class="menu-command" onclick="maximizeWindow(this)">Ma<u>x</u>imize</div>
+                        <hr>
+                        <div class="menu-command" onclick="closeWindow(this)"><u>C</u>lose</div>
+                        <hr>
+                        <div class="menu-command">S<u>w</u>itch to...</div>
+                    </div>
+                </div>
+                <div class="title"
+                    ondblclick="maximizeWindow(this)"
+                    onmousedown="setMouseDown(this, event)"
+                    onmouseup="setMouseUp(this)">
+                    Applications
+                </div>
+                <div class="minimize-box">
+                    <div class="minimize-button" onclick="closeWindow(this)">
+                        <i class="fas fa-sort-down"></i>
+                    </div>
+                </div>
+                <div class="maximize-box">
+                    <div class="maximize-button" onclick="maximizeWindow(this)">
+                        <i class="fas fa-sort-up"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="window-content">
+
+            </div>
+        </div><!-- .WINDOW #WINDOW-PROGRAM-MANAGER-APPLICATIONS -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="window-with-menu-bar" id="window-notepad" onmousedown="clickOnWindow(this)" tabindex="0">
+            <div class="title-bar">
+                <div class="control-menu" tabindex="0">
+                    <div class="control-menu-box" ondblclick="closeWindow(this)">&ndash;</div>
+                    <div class="menu-list">
+                        <div class="menu-command disabled" onclick="maximizeWindow(this)"><u>R</u>estore</div>
+                        <div class="menu-command"><u>M</u>ove...</div>
+                        <div class="menu-command"><u>S</u>ize</div>
+                        <div class="menu-command">Mi<u>n</u>imize</div>
+                        <div class="menu-command" onclick="maximizeWindow(this)">Ma<u>x</u>imize</div>
+                        <hr>
+                        <div class="menu-command" onclick="closeWindow(this)"><u>C</u>lose</div>
+                        <hr>
+                        <div class="menu-command">S<u>w</u>itch to...</div>
+                    </div>
+                </div>
+                <div class="title"
+                    ondblclick="maximizeWindow(this)"
+                    onmousedown="setMouseDown(this, event)"
+                    onmouseup="setMouseUp(this)">
+                    Notepad
+                </div>
+                <div class="minimize-box">
+                    <div class="minimize-button" onclick="closeWindow(this)">
+                        <i class="fas fa-sort-down"></i>
+                    </div>
+                </div>
+                <div class="maximize-box">
+                    <div class="maximize-button" onclick="maximizeWindow(this)">
+                        <i class="fas fa-sort-up"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-bar">
+                <div class="menu-name" tabindex="0">
+                    <u>F</u>ile
+                    <div class="menu-list">
+                        <div class="menu-command"><u>N</u>ew</div>
+                        <div class="menu-command"><u>O</u>pen...</div>
+                        <div class="menu-command"><u>S</u>ave</div>
+                        <div class="menu-command">Save <u>A</u>s...</div>
+                        <div class="menu-command disabled"><u>P</u>rint</div>
+                        <div class="menu-command">Page Se<u>t</u>up...</div>
+                        <div class="menu-command">P<u>r</u>int Setup...</div>
+                        <hr>
+                        <div class="menu-command" onclick="closeWindow(this)">E<u>x</u>it</div>
+                    </div>
+                </div><div class="menu-name" tabindex="0"><u>E</u>dit
+                </div><div class="menu-name" tabindex="0"><u>S</u>earch
+                </div><div class="menu-name" tabindex="0"><u>H</u>elp</div>
+            </div>
+            <div class="window-content">
+                <textarea>tekst</textarea>
+            </div>
+        </div><!-- .WINDOW #WINDOW-NOTEPAD -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="window-with-menu-bar" id="window-write" onmousedown="clickOnWindow(this)" tabindex="0">
+            <div class="title-bar">
+                <div class="control-menu" tabindex="0">
+                    <div class="control-menu-box" ondblclick="closeWindow(this)">&ndash;</div>
+                    <div class="menu-list">
+                        <div class="menu-command disabled" onclick="maximizeWindow(this)"><u>R</u>estore</div>
+                        <div class="menu-command"><u>M</u>ove...</div>
+                        <div class="menu-command"><u>S</u>ize</div>
+                        <div class="menu-command">Mi<u>n</u>imize</div>
+                        <div class="menu-command" onclick="maximizeWindow(this)">Ma<u>x</u>imize</div>
+                        <hr>
+                        <div class="menu-command" onclick="closeWindow(this)"><u>C</u>lose</div>
+                        <hr>
+                        <div class="menu-command">S<u>w</u>itch to...</div>
+                    </div>
+                </div>
+                <div class="title"
+                    ondblclick="maximizeWindow(this)"
+                    onmousedown="setMouseDown(this, event)"
+                    onmouseup="setMouseUp(this)">
+                    Write - README.WRI
+                </div>
+                <div class="minimize-box">
+                    <div class="minimize-button" onclick="closeWindow(this)">
+                        <i class="fas fa-sort-down"></i>
+                    </div>
+                </div>
+                <div class="maximize-box">
+                    <div class="maximize-button" onclick="maximizeWindow(this)">
+                        <i class="fas fa-sort-up"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-bar">
+                <div class="menu-name" tabindex="0">
+                    <u>F</u>ile
+                    <div class="menu-list">
+                        <div class="menu-command"><u>N</u>ew</div>
+                        <div class="menu-command"><u>O</u>pen...</div>
+                        <div class="menu-command"><u>S</u>ave</div>
+                        <div class="menu-command">Save <u>A</u>s...</div>
+                        <hr>
+                        <div class="menu-command disabled"><u>P</u>rint...</div>
+                        <div class="menu-command">P<u>r</u>int Setup...</div>
+                        <div class="menu-command">R<u>e</u>paginate...</div>
+                        <hr>
+                        <div class="menu-command" onclick="closeWindow(this)">E<u>x</u>it</div>
+                    </div>
+                </div><div class="menu-name" tabindex="0"><u>E</u>dit
+                </div><div class="menu-name" tabindex="0">Fi<u>n</u>d
+                </div><div class="menu-name" tabindex="0"><u>C</u>haracter
+                </div><div class="menu-name" tabindex="0"><u>P</u>aragraph
+                </div><div class="menu-name" tabindex="0"><u>D</u>ocument
+                </div><div class="menu-name" tabindex="0"><u>H</u>elp</div>
+            </div>
+            <div class="window-content">
+<textarea>Hello! This is Windows 3.1 Simulator.
+Project site: https://github.com/karol-kiersnowski/win31</textarea>
+            </div>
+        </div><!-- .WINDOW #WINDOW-WRITE-README -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="window" id="window-msdos" onmousedown="clickOnWindow(this)" tabindex="0">
+            <div class="title-bar">
+                <div class="control-menu" tabindex="0">
+                    <div class="control-menu-box" ondblclick="closeWindow(this)">&ndash;</div>
+                    <div class="menu-list">
+                        <div class="menu-command disabled" onclick="maximizeWindow(this)"><u>R</u>estore</div>
+                        <div class="menu-command"><u>M</u>ove...</div>
+                        <div class="menu-command"><u>S</u>ize</div>
+                        <div class="menu-command">Mi<u>n</u>imize</div>
+                        <div class="menu-command" onclick="maximizeWindow(this)">Ma<u>x</u>imize</div>
+                        <hr>
+                        <div class="menu-command" onclick="closeWindow(this)"><u>C</u>lose</div>
+                        <hr>
+                        <div class="menu-command">S<u>w</u>itch to...</div>
+                    </div>
+                </div>
+                <div class="title"
+                    ondblclick="maximizeWindow(this)"
+                    onmousedown="setMouseDown(this, event)"
+                    onmouseup="setMouseUp(this)">
+                    MS-DOS Prompt
+                </div>
+                <div class="minimize-box">
+                    <div class="minimize-button" onclick="closeWindow(this)">
+                        <i class="fas fa-sort-down"></i>
+                    </div>
+                </div>
+                <div class="maximize-box">
+                    <div class="maximize-button" onclick="maximizeWindow(this)">
+                        <i class="fas fa-sort-up"></i>
+                    </div>
+                </div>
+            </div>
+            
+                <iframe id="iframe-msdos" src="../webdos/index.html" title="WebDOS"></iframe>
+            
+        </div><!-- .WINDOW #WINDOW-MSDOS -->
+        <div></div><!--GORILLAS.BAS--!>
+        
+    </div><!-- #DESKTOP -->
+
+</body>
+</html>
+<script>
+var isFullscreen = false;
+    var startScreen = document.getElementById("start-screen");
+    var desktop = document.getElementById("desktop");
+    var startMenu = document.getElementById("start-menu");
+    var windowExitWindows = document.getElementById("window-exit-windows");
+    
+    var programManager = {
+        window: document.getElementById("window-program-manager"),
+        isMaximized: false,
+        x: null,
+        y: null,
+        width: null,
+        height: null,
+        isMouseDown: false,
+        mouseXInTitleBar: null,
+        mouseYInTitleBar: null
+    };
+    
+    var programManagerMain = {
+        window: document.getElementById("window-program-manager-main"),
+        isMaximized: false,
+        x: null,
+        y: null,
+        width: null,
+        height: null,
+        isMouseDown: false,
+        mouseXInTitleBar: null,
+        mouseYInTitleBar: null
+    };
+    
+    var programManagerAccessories = {
+        window: document.getElementById("window-program-manager-accessories"),
+        isMaximized: false,
+        x: null,
+        y: null,
+        width: null,
+        height: null,
+        isMouseDown: false,
+        mouseXInTitleBar: null,
+        mouseYInTitleBar: null
+    };
+    
+    var programManagerGames = {
+        window: document.getElementById("window-program-manager-games"),
+        isMaximized: false,
+        x: null,
+        y: null,
+        width: null,
+        height: null,
+        isMouseDown: false,
+        mouseXInTitleBar: null,
+        mouseYInTitleBar: null
+    };
+    
+    var programManagerStartup = {
+        window: document.getElementById("window-program-manager-startup"),
+        isMaximized: false,
+        x: null,
+        y: null,
+        width: null,
+        height: null,
+        isMouseDown: false,
+        mouseXInTitleBar: null,
+        mouseYInTitleBar: null
+    };
+    
+    var programManagerApplications = {
+        window: document.getElementById("window-program-manager-applications"),
+        isMaximized: false,
+        x: null,
+        y: null,
+        width: null,
+        height: null,
+        isMouseDown: false,
+        mouseXInTitleBar: null,
+        mouseYInTitleBar: null
+    };
+    
+    var msdos = {
+        window: document.getElementById("window-msdos"),
+        isMaximized: false,
+        x: null,
+        y: null,
+        width: null,
+        height: null,
+        isMouseDown: false,
+        mouseXInTitleBar: null,
+        mouseYInTitleBar: null
+    };
+    
+    var notepad = {
+        window: document.getElementById("window-notepad"),
+        isMaximized: false,
+        x: null,
+        y: null,
+        width: null,
+        height: null,
+        isMouseDown: false,
+        mouseXInTitleBar: null,
+        mouseYInTitleBar: null
+    };
+    
+    var writeApp = {
+        window: document.getElementById("window-write"),
+        isMaximized: false,
+        x: null,
+        y: null,
+        width: null,
+        height: null,
+        isMouseDown: false,
+        mouseXInTitleBar: null,
+        mouseYInTitleBar: null
+    };
+    
+    var apps = [ programManager, programManagerMain, programManagerAccessories, programManagerGames, programManagerStartup, programManagerApplications, msdos, notepad, writeApp ];
+    
+    var fileManager = {
+        mouseX: null,
+        mouseY: null,
+        x: null,
+        y: null
+    };
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    function init() {
+        programManagerMain.window.focus();
+        setTimeout(function() {
+            startScreen.style.display = "none";
+        }, 2000);
+    }
+    
+    function startWindowsSession() {
+        programManagerMain.window.focus();
+        var audio = new Audio("audio/TADA.WAV");
+        audio.play();
+        startScreen.style.display = "none";
+    }
+    
+    function exitWindowsSession() {
+        var audio = new Audio("audio/CHIMES.WAV");
+        audio.play();
+        setTimeout(function() {
+            window.close();
+        },1000);
+    }
+    
+    function showWindowExitWindows() {
+        windowExitWindows.style.display = "block";
+        document.getElementById("button-ok").focus();
+    }
+    
+    function closeWindow(caller) {
+        var thisWindow;
+        if (caller.className == "control-menu-box")
+            thisWindow = caller.parentElement.parentElement.parentElement;
+        else if (caller.className == "menu-command")
+            thisWindow = caller.parentElement.parentElement.parentElement.parentElement;
+        else if (caller.className == "minimize-button")
+            thisWindow = caller.parentElement.parentElement.parentElement;
+        else if (caller.tagName == "BUTTON")
+            thisWindow = caller.parentElement.parentElement;
+        thisWindow.style.display = "none";
+    }
+    
+    function maximizeWindow(caller) {
+        var thisApp;        
+        var thisWindow;
+        var restoreCommand;
+        var maximizeCommand;
+        var maximizeButton;
+    
+        if (caller.className == "menu-command")
+            thisWindow = caller.parentElement.parentElement.parentElement.parentElement;
+        else if (caller.className == "title")
+            thisWindow = caller.parentElement.parentElement;
+        else if (caller.className == "maximize-button")
+            thisWindow = caller.parentElement.parentElement.parentElement;
+    
+        for (var i=0; i<apps.length; i++)
+            if (thisWindow.id == apps[i].window.id) {
+                thisApp = apps[i];
+            }
+    
+        restoreCommand = thisWindow.children[0].children[0].children[1].children[0];
+        maximizeCommand = thisWindow.children[0].children[0].children[1].children[4];
+        maximizeButton = thisWindow.children[0].children[3].children[0];
+    
+        // MAXIMIZE WINDOW
+        if (restoreCommand.className == "menu-command disabled") {
+            thisApp.x = thisWindow.offsetLeft;
+            thisApp.y = thisWindow.offsetTop;
+            thisApp.width = thisWindow.offsetWidth;
+            thisApp.height = thisWindow.offsetHeight;
+            thisWindow.style.top = "0px";
+            thisWindow.style.left = "0px";
+            thisWindow.style.width = "100%";
+            thisWindow.style.height = "100%";
+            thisWindow.style.border = "0px";
+    
+            restoreCommand.className = "menu-command";
+            maximizeCommand.className = "menu-command disabled";
+            maximizeButton.children[0].className = "fas fa-sort";
+            maximizeButton.children[0].style.verticalAlign = "middle";
+        } // RESTORE WINDOW
+        else if (restoreCommand.className == "menu-command") {
+            thisWindow.style.top = thisApp.y + "px";
+            thisWindow.style.left = thisApp.x + "px";
+            thisWindow.style.width = thisApp.width + "px";
+            thisWindow.style.height = thisApp.height + "px";
+            thisWindow.style.border = "";
+    
+            restoreCommand.className = "menu-command disabled";
+            maximizeCommand.className = "menu-command";
+            maximizeButton.children[0].className = "fas fa-sort-up";
+            maximizeButton.children[0].style.verticalAlign = "bottom";
+        }
+    
+        thisWindow.focus();
+    }
+    
+    function restoreWindowFromMaximization() {
+    
+    }
+    
+    function minimizeWindow() {
+    
+    }
+    
+    function restoreWindowFromMinimization() {
+    
+    }
+    
+    function switchScreenMode(caller) {
+        var iconButton = caller.children[0];
+        var iconText = caller.children[0].children[0];
+        //alert(icon.className);
+        if (!isFullscreen) {
+            document.documentElement.requestFullscreen();
+            isFullscreen = true;
+            iconButton.style.border = "2px inset";
+            iconButton.style.textShadow = "1px 1px #fff";
+            iconText.className = "fa fa-compress";
+        }
+        else {
+            document.exitFullscreen();
+            isFullscreen = false;
+            iconButton.style.border = "2px outset";
+            iconButton.style.textShadow = "-1px -1px #fff";
+            iconText.className = "fa fa-expand";
+        }
+    }
+    
+    function clickOnWindow(thisWindow) {
+        for (var i=0; i<apps.length; i++)
+            if (thisWindow.getAttribute("id") == apps[i].window.id)
+                apps[i].window.style.zIndex = (Math.max(apps[0].window.style.zIndex, apps[1].window.style.zIndex, apps[2].window.style.zIndex))+ 1;
+    }
+    
+    function setMouseDown(titleBar, mouse) {
+        for (var i=0; i<apps.length; i++) {
+            if (titleBar.parentElement.parentElement.id == apps[i].window.id) {
+                apps[i].isMouseDown = true;
+                apps[i].mouseXInTitleBar = mouse.clientX - apps[i].window.offsetLeft;
+                apps[i].mouseYInTitleBar = mouse.clientY - apps[i].window.offsetTop;
+            }
+        }
+    }
+    
+    function setMouseUp(titleBar) {
+        for (var i=0; i<apps.length; i++)
+            if (titleBar.parentElement.parentElement.id == apps[i].window.id)
+                apps[i].isMouseDown = false;
+    }
+    
+    function tryMoveElement(mouse) {
+        for (var i=0; i<apps.length; i++) {
+            if (apps[i].window.children[0].children[0].children[1].children[0].className == "menu-command disabled") {
+                if (apps[i].isMouseDown) {
+                    apps[i].window.style.left = mouse.clientX - apps[i].mouseXInTitleBar + "px";
+                    apps[i].window.style.top = mouse.clientY - apps[i].mouseYInTitleBar + "px";
+                }
+            }
+        }
+    }
+    
+    function runApp(app) {
+        app.window.style.display = "block";
+        app.window.style.zIndex = "2";
+        app.window.focus();
+        clickOnWindow(app.window);
+    }
+    
+    function dragStartIcon(icon, mouse) {
+        var parent = icon.parentElement;
+        // fileManager.mouseX = mouse.clientX - parent.offsetLeft;
+        // fileManager.mouseY = mouse.clientY - parent.offsetTop;
+        console.log("Start: " + mouse.clientX + " " + mouse.clientY);
+    }
+    
+    function dragEndIcon(icon, mouse) {
+        var parent = icon.parentElement;
+        icon.style.position.absolute;
+        // icon.style.left = mouse.clientX - fileManager.mouseX + "px";
+        // icon.style.top = mouse.clientY - fileManager.mouseY + "px";
+        console.log("End: " + mouse.offsetLeft + " " + mouse.clientY);
+        //console.log(x, y);
+        // icon.style.position = "absolute";
+        // icon.style.top = icon.offsetTop + "px";
+        // icon.style.left = "20px";
+    }
+    
+    function dragstart(icon, evt) {
+        evt = evt || window.event;
+        var x = evt.pageX,
+            y = evt.pageY;
+    
+        console.log(x, y);
+        icon.style.position = "absolute";
+        icon.style.top = y + "px";
+        icon.style.left = x + "px";
+    }
+</script>
