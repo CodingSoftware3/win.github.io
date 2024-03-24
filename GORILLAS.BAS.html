@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Microsoft GORILLAS.BAS - Now on your browser!</title>
+  <link rel="stylesheet" href="./style.css">
+  <style>
+@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Mono&display=swap');
+      
+      :root {
+        --blueColor: #0e249a;
+        --cyanColor: #129495;
+        --grayColor: #99999a;
+        --redColor: #9b1210;
+        --yellowColor: #fbfa50;
+        --darkgrayColor: #535451;
+        --orangeColor: #ffa55c;
+        --normalFont: 'IBM Plex Mono', monospaced;
+        
+        --ants-speed: 0.25s;
+        
+        --left-arm: 0;
+        --right-arm: 0;
+        
+        font-family: var(--normalFont);
+        font-size: 19px;
+      }
+      
+      body {
+        background: black;
+        margin: 0;
+      }
+      
+      .monitor {
+        width: 1024px;
+        height: 676px;
+        margin: 2em auto;
+        position: relative;  
+      }
+      
+      .start {
+        text-align: center;
+      }
+      
+      .start h1 { 
+          font-size: 1rem;
+          color: #fff;
+          letter-spacing: 16px;
+          margin-top: 32px;
+        }
+      
+      .start h3 { color: #bbb; }
+      
+      .start p {
+          max-width: 700px;
+          margin: auto;
+          color: #bbb;
+        }
+      
+      .start .redants {    
+          position: relative;
+        }
+      
+      .start .redants .welcome {
+            height: 400px;
+            position: relative;
+          }
+      
+      .start .redants .welcome p {
+              margin: 22px auto;
+            }
+      
+      .start .redants .welcome a { 
+              color: cyan;
+            }
+      
+      .start .redants .welcome a:hover { color: red }
+      
+      .start .redants .welcome::before, .start .redants .welcome::after {
+              content: "* * * * ";
+              line-height: 100px;
+              width: 5px;
+              height: 100%;
+              display: inline-block;
+              position: absolute;
+              top: -40px;
+              color: red;
+              -webkit-animation: moveAntsV var(--ants-speed) linear infinite;
+                      animation: moveAntsV var(--ants-speed) linear infinite;
+            }
+      
+      .start .redants .welcome::before { left: 0; }
+      
+      .start .redants .welcome::after { right: 0; animation-direction: reverse; }
+      
+      .start .redants::before, .start .redants::after {
+            content: "* * * * * * * * * * * * * * * * ";
+            letter-spacing: 20px;
+            color: red;
+            position: relative;
+            left: -15px;
+            display: inline-block;
+            overflow: hidden;
+            -webkit-animation: moveAnts var(--ants-speed) linear infinite;
+                    animation: moveAnts var(--ants-speed) linear infinite;      
+          }
+      
+      .start .redants::before { animation-direction: reverse }
+      
+      .start .press {
+          margin: 1em auto;
+        }
+      
+      .intro {
+        width: 100%;
+        height: 500px;
+        background: var(--blueColor);
+        text-align: center;
+        padding-top: 50px;
+      }
+      
+      .intro h1 {
+          letter-spacing: 16px;
+          margin-bottom: 32px;
+        }
+      
+      .intro h1, .intro h2, .intro p {
+          font-size: 1rem;
+          color: #fff;
+        }
+      
+      .screen {
+        border: 5px solid var(--blueColor);
+        border-bottom-width: 25px;
+        background: var(--blueColor);  
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      
+      .top {
+        display: flex;
+        justify-content: space-between;
+        color: #fff;
+        padding: 10px;
+      }
+      
+      .top span {
+          display: block;
+        }
+      
+      .sunflare {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: conic-gradient(yellow 1deg 4deg, var(--blueColor) 5deg 40deg,
+          yellow 41deg 44deg, var(--blueColor) 45deg 80deg,
+          yellow 81deg 84deg, var(--blueColor) 85deg 120deg,
+          yellow 121deg 124deg, var(--blueColor) 125deg 160deg,
+          yellow 161deg 164deg, var(--blueColor) 165deg 200deg,
+          yellow 201deg 204deg, var(--blueColor) 205deg 240deg,
+          yellow 241deg 244deg, var(--blueColor) 245deg 280deg,
+          yellow 281deg 284deg, var(--blueColor) 285deg 320deg,
+          yellow 321deg 324deg, var(--blueColor) 325deg 360deg);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      .sun {
+        width: 60px;
+        height: 60px;
+        background: yellow;
+        border-radius: 50%;
+        position: relative;
+      }
+      
+      .sun::after,
+        .sun::before {
+          content: "";
+          display: inline-block;
+          border-radius: 50%;
+          width: 6px;
+          height: 6px;
+          background: var(--blueColor);
+          position: absolute;
+          top: 30%;
+        }
+      
+      .sun::before { left: 30%; }
+      
+      .sun::after { right: 30%; }
+      
+      .sun .mouth {
+          height: 30px;
+          border: 0 solid var(--blueColor);
+          border-bottom-width: 3px;
+          border-radius: 40%;
+          margin: 12px;
+        }
+      
+      .sun.surprised .mouth {
+          background: var(--blueColor);
+          width: 9px;
+          height: 8px;
+          transform: translate(14px, 22px);    
+        }
+      
+      .board {
+        height: 420px;
+      }
+      
+      .buildings {
+        height: 350px;
+        display: flex;
+        align-items: flex-end;
+      }
+      
+      .building {
+        width: 100%;
+        background: darkgrey;
+        overflow: hidden;
+        position: relative;
+        z-index: 1;  
+      }
+      
+      .building.type1 { background: var(--cyanColor); }
+      .building.type2 { background: var(--grayColor); }
+      .building.type3 { background: var(--redColor); }
+      
+      .window {
+        display: inline-block;
+        background: var(--darkgrayColor);
+        width: 12px;
+        height: 20px;
+        margin: 8px;
+      }
+      
+      .window.on {
+        background: var(--yellowColor);
+      }
+      
+      gorilla-player {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 50px;
+        height: 60px;
+        position: absolute;
+        z-index: 2;
+      }
+      
+      gorilla-player.charging {
+          -webkit-animation: charging 1s linear infinite;
+                  animation: charging 1s linear infinite;
+        }
+      
+      gorilla-player .head {
+          position: relative;
+          width: 16px;
+          height: 16px;
+          border-radius: 8px / 14px;
+          background: var(--orangeColor);
+        }
+      
+      gorilla-player .head .brows {
+            position: relative;
+            top: 1px;
+            margin: 2px;
+            height: 2px;
+            background: var(--blueColor);
+          }
+      
+      gorilla-player .head::before, gorilla-player .head::after {
+            content: "";
+            display: inline-block;
+            width: 3px;
+            height: 2px;
+            background: var(--blueColor);
+            position: absolute;
+            top: 6px;
+          }
+      
+      gorilla-player .head::before { left: 4px; }
+      
+      gorilla-player .head::after { right: 4px; }
+      
+      gorilla-player .body {
+          display: flex;
+        }
+      
+      gorilla-player .chest {
+          width: 24px;
+          height: 24px;
+          border-radius: 0 0 6px 6px / 0 0 16px 16px;
+          background: var(--orangeColor);
+          position: relative;
+        }
+      
+      gorilla-player .chest::before, gorilla-player .chest::after {
+            content: "";
+            border: 0 solid var(--blueColor);
+            border-bottom-width: 2px;
+            border-radius: 25px;
+            top: -2px;
+            width: 50%;
+            height: 12px;
+            display: inline-block;
+            position: absolute;
+          }
+      
+      gorilla-player .chest::before {
+            transform: rotate(-30deg);
+          }
+      
+      gorilla-player .chest::after {
+            transform: rotate(30deg);
+            right: 0;
+          }
+      
+      gorilla-player .arm, gorilla-player .leg {
+          width: 16px;
+          height: 22px;
+          border-radius: 50%;
+          border: 0 solid var(--orangeColor);
+          border-left-width: 8px;
+          -webkit-clip-path: polygon(0 0, 100% 0, 100% 85%, 0 85%);
+                  clip-path: polygon(0 0, 100% 0, 100% 85%, 0 85%);
+        }
+      
+      gorilla-player .arm.left, gorilla-player .leg.left { transform: translateX(15px) translateY(var(--left-arm)); }
+      
+      gorilla-player .arm.right, gorilla-player .leg.right { transform: translateX(-15px) translateY(var(--right-arm)) scaleX(-1); }
+      
+      gorilla-player .legs {
+          display: flex;
+          justify-content: space-between;
+          position: relative;
+          top: -6px;    
+        }
+      
+      gorilla-player .leg {
+          margin: 0 2px;
+        }
+      
+      gorilla-player .leg.left { transform: translate(14px); }
+      
+      gorilla-player .leg.right { transform: translate(-14px) scaleX(-1); }
+      
+      [hidden] {
+        display: none;
+      }
+      
+      @-webkit-keyframes moveAnts {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(64px); }
+      }
+      
+      @keyframes moveAnts {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(64px); }
+      }
+      
+      @-webkit-keyframes moveAntsV {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(64px); }
+      }
+      
+      @keyframes moveAntsV {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(64px); }
+      }
+      
+      .cpu {
+        transform: scaleX(-1);
+      }
+      
+      banana-missil {
+        display: block;
+        width: 10px;
+        height: 16px;
+        border: 0 solid var(--yellowColor);
+        border-left-width: 7px;
+        border-radius: 50%;
+        position: absolute;
+      }
+      
+      banana-missil.shoot {
+          -webkit-animation: 
+            shoot 5s linear infinite,
+            spin 1s linear infinite;
+                  animation: 
+            shoot 5s linear infinite,
+            spin 1s linear infinite;
+        }
+      
+      banana-missil.spin {
+          -webkit-animation: spin 1s linear infinite;
+                  animation: spin 1s linear infinite;
+        }
+      
+      @-webkit-keyframes spin {
+        0% { transform: rotate(0); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      @-webkit-keyframes charging {
+        0%, 100% { 
+          filter: drop-shadow(0 0 15px yellow);
+          transform: translateY(-7px);
+        }
+        50% { 
+          filter: drop-shadow(0 0 5px yellow); 
+          transform: translateY(-3px);
+        }
+      }
+      
+      @keyframes charging {
+        0%, 100% { 
+          filter: drop-shadow(0 0 15px yellow);
+          transform: translateY(-7px);
+        }
+        50% { 
+          filter: drop-shadow(0 0 5px yellow); 
+          transform: translateY(-3px);
+        }
+      }
+  </style>
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="monitor">
+  <div class="start">
+    <div class="redants">
+      <div class="welcome">
+        <h1>QBasic GORILLAS</h1>
+        <h3>Copyright (C) Microsoft Corporation 1990</h3>
+        <p>This is a visual/interactive demo of GORILLAS.BAS, a game from Microsoft QBASIC from MSDOS written by IBM. I recreated look & feel on plain HTML/CSS/Javascript <strong>without images neither <code>&lt;canvas&gt;</code></strong>.</p>
+        <p><strong>Caution</strong>: This demo isn't a playable game. Only is a challenge demo for fun purposes.</p>
+        <p>Follow me on <a href="https://twitter.com/Manz">Twitter</a>, <a href="https://github.com/ManzDev">GitHub</a> o my <a href="https://manzdev.github.io/">Demo Page</a></p>
+      </div>        
+    </div>
+    <p class="press">Mouse click to continue</p>
+  </div>
+  <div class="intro" hidden>
+    <h1>QBASIC GORILLAS</h1>
+    <h2>HTML/CSS/JS demo by</h2>
+    <p>Manz</p>
+    <h2>Original game by</h2>
+    <p>Microsoft</p>
+  </div>
+  <div class="screen" hidden>
+    <div class="top">
+      <div class="playerdata">
+        <span class="name">Player</span>
+        <span class="angle">Angle: </span>
+        <span class="velocity">Velocity: </span>
+      </div>
+      <div class="sunflare">
+        <div class="sun">
+          <div class="mouth"></div>
+        </div>
+      </div>
+      <div class="cpudata">
+        <span class="name">CPU</span>
+        <span class="angle">Angle: </span>
+        <span class="velocity">Velocity: </span>   
+      </div>
+    </div>
+    <div class="buildings"></div>
+  </div>
+  <gorilla-player class="player" hidden></gorilla-player>
+  <gorilla-player class="cpu" hidden></gorilla-player>
+  <banana-missil hidden></banana-missil>
+</div>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.2/howler.min.js'></script><script>
+const dom = {
+        buildings: document.querySelector('.buildings'),
+        player: document.querySelector('gorilla-player.player'),
+        cpu: document.querySelector('gorilla-player.cpu'),
+        start: document.querySelector('.start'),
+        intro: document.querySelector('.intro'),
+        screen: document.querySelector('.screen'),
+        banana: document.querySelector('banana-missil'),
+        sun: document.querySelector('.sun') };
+      
+      
+      const sounds = {
+        hit: new Howl({ src: ['https://manzdev.github.io/cursos-assets/js/gorillas/armhit.mp3'] }),
+        intro: new Howl({ src: ['https://manzdev.github.io/cursos-assets/js/gorillas/intro.mp3'] }),
+        scream: new Howl({ src: ['https://manzdev.github.io/cursos-assets/js/goku-transform.mp3'] }),
+        charging: new Howl({ src: ['https://manzdev.github.io/cursos-assets/js/charging.mp3'], loop: true }),
+        event: new Howl({ src: ['https://manzdev.github.io/cursos-assets/js/gorillas/event.mp3?4'] }),
+        explode: new Howl({ src: ['https://manzdev.github.io/cursos-assets/js/gorillas/explode.mp3'] }) };
+      
+      
+      const NUMBUILDINGS = 5 + ~~(Math.random() * 4);
+      
+      const switchLight = win => {
+        win.classList.toggle('on');
+        win.classList.toggle('off');
+        sounds.event.play();
+      };
+      
+      for (let i = 0; i < NUMBUILDINGS; i++) {
+        const div = document.createElement('div');
+        for (let w = 0; w < 75; w++) {
+          const win = document.createElement('div');
+          const state = ~~(Math.random() * 2);
+          win.className = `window ${['on', 'off'][state]}`;
+          win.addEventListener('click', switchLight.bind(this, win));
+          div.appendChild(win);
+        }
+        const type = 1 + ~~(Math.random() * 3);
+        div.className = `building type`;
+        div.style.height = 100 + ~~(Math.random() * 300) + 'px';
+        dom.buildings.appendChild(div);
+      }
+      
+      const GorillaPlayer = class extends HTMLElement {
+        constructor() {
+          super();
+          this.armsUp = false;
+          this.innerHTML = `
+            <div class="head">
+              <div class="brows"></div>
+            </div>
+            <div class="body">
+              <div class="left arm"></div>
+              <div class="chest"></div>
+              <div class="right arm"></div>
+            </div>
+            <div class="legs">
+              <div class="left leg"></div>
+              <div class="right leg"></div>
+            </div>
+      `;
+        }
+      
+        moveTo(x, y) {
+          this.x = x;
+          this.y = y;
+          this.style.left = `px`;
+          this.style.top = `px`;
+        }
+      
+        placeAtBuilding(n = 2) {
+          const building = document.querySelector(`.building:nth-child()`);
+          const coords = {
+            x: building.offsetLeft + building.offsetWidth / 2 - 25,
+            y: building.offsetTop - 51 };
+      
+          this.moveTo(coords.x, coords.y);
+        }
+      
+        dance(n = 8, sound = true, speed = 400) {
+          if (this.timer)
+          clearInterval(this.timer);
+      
+          this.timer = setInterval(() => {
+            this.armsUp = !this.armsUp;
+            this.style.setProperty('--left-arm', ` 0px`);
+            this.style.setProperty('--right-arm', `${!this.armsUp ? -18 : 0}px`);
+            if (sound)
+            sounds.hit.play();
+          }, speed);
+          setTimeout(() => {
+            clearInterval(this.timer);
+            this.style.setProperty('--left-arm', 0);
+            this.style.setProperty('--right-arm', 0);
+            this.armsUp = false;
+          }, speed * n);
+        }};
+      
+      customElements.define('gorilla-player', GorillaPlayer);
+      
+      const BananaMissil = class extends HTMLElement {
+        constructor() {
+          super();
+        }
+      
+        shoot(player) {
+          this.hidden = false;
+          this.enableRotate();
+          this.x = player.x + 16;
+          this.y = player.y - 32;
+          this.moveTo(this.x, this.y);
+          sounds.charging.play();
+          player.classList.add('charging');
+      
+          setTimeout(() => {
+            sounds.scream.play();
+          }, 2000);
+      
+          setTimeout(() => {
+            this.disableRotate();
+            this.hidden = true;
+            sounds.charging.pause();
+            sounds.explode.play();
+            player.classList.remove('charging');
+          }, 5000);
+        }
+      
+        moveTo(x, y) {
+          this.style.top = `px`;
+          this.style.left = `px`;
+        }
+      
+        enableRotate() {this.classList.add('spin');}
+        disableRotate() {this.classList.remove('spin');}};
+      
+      
+      customElements.define('banana-missil', BananaMissil);
+      
+      // Phase 1
+      dom.start.addEventListener('click', () => {
+        dom.start.hidden = true;
+        dom.intro.hidden = false;
+        dom.player.hidden = false;
+        dom.cpu.hidden = false;
+      
+        dom.player.moveTo(450, 325);
+        dom.cpu.moveTo(525, 325);
+      
+        dom.player.dance(8, false, 1400);
+        dom.cpu.dance(8, false, 1400);
+        sounds.intro.play();
+      
+        setTimeout(() => {
+          dom.player.dance(8, false, 325);
+          dom.cpu.dance(8, false, 325);
+        }, 11200);
+      
+        // Phase 2
+        setTimeout(() => {
+          dom.intro.hidden = true;
+          dom.screen.hidden = false;
+      
+          dom.player.placeAtBuilding(2);
+          dom.cpu.placeAtBuilding(NUMBUILDINGS - 1);
+      
+          // Fun events
+          dom.player.addEventListener('click', function () {this.dance();});
+          dom.player.addEventListener('dblclick', function () {dom.banana.shoot(this);});
+          dom.cpu.addEventListener('click', function () {this.dance();});
+          dom.sun.addEventListener('click', function () {this.classList.toggle('surprised');});
+        }, 14000);
+      
+      });
+  </script>
+
+</body>
+</html>
