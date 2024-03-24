@@ -1,0 +1,52 @@
+<style>
+    @font-face {
+        font-family: "Perfect DOS VGA 437";
+        src: url(https://manzdev.github.io/twitch-manzdev-bios/assets/perfect-dos-vga437.woff2) format("woff2");
+    }
+
+    body {
+        background-color: black;
+        font-family: "Perfect DOS VGA 437";
+        color: white;
+    }
+
+    .screen {
+        height: 1024px;
+        width: 768px;
+    }
+
+    #prompto {
+        color: white;
+    }
+
+    .type {
+        background: black;
+        color: white;
+        font-family: "Perfect DOS VGA 437";
+    }
+</style>
+<div class="screen">
+    <p id="prompto">A:/><input type="text" class="type" id="commandInput"></p>
+    <br>
+</div>
+<script>
+    document.getElementById('commandInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            var command = document.getElementById('commandInput').value.trim().toLowerCase();
+            switch (command) {
+                case 'win':
+                    window.location.href = 'https://codingsoftware3.github.io/win.github.io/win3.1Webver1.html';
+                    break;
+                case 'setup':
+                    window.location.href = '';
+                    break;
+                case 'gorillas.bas':
+                    window.location.href = 'https://codingsoftware3.github.io/win.github.io/index.html';
+                    break;
+                default:
+                    alert('Bad command or file name');
+            }
+            document.getElementById('commandInput').value = '';
+        }
+    });
+</script>
