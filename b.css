@@ -1,0 +1,21 @@
+/*
+  Perfect DOS VGA 437 font:
+  https://portfolio.zehfernando.com/
+*/
+
+@font-face {
+    font-family: "Perfect DOS VGA 437";
+    src: url(https://manzdev.github.io/twitch-manzdev-bios/assets/perfect-dos-vga437.woff2) format("woff2");
+  }
+
+  body {
+    background: #000;
+    font-family: "Perfect DOS VGA 437", monospace;
+    font-size: 22px;
+    color: #888;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    margin: 0;
+    transform: scale(0.6) translateY(-25%);
+  }
