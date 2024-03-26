@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Gorilla.bas</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+<link rel="stylesheet" href="./style.css">
+<style>
+:root {
+      --gorilla:#fda852;
+      --sky: #0000a8;
+      --sun:#f9fc11;
+      --window: #f7fd5c;
+      --windowOff: #535353;
+    }
+    
+    [contenteditable] {
+      outline: 0;
+    }
+    
+    body {
+      background: #555;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      min-width: 100wv;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      color: #fff;
+      font-family: courier;
+      font-size: 0.834em !important;
+    }
+    
+    #init {
+      background: #000;
+      color: #fff;
+      text-align: center;
+      display: none;
+      position: relative;
+    }
+    #init .sparkle {
+      color: red;
+      position: absolute;
+      white-space: pre;
+    }
+    #init .sparkle.sparkleT {
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+    #init .sparkle.sparkleB {
+      top: 22em;
+      left: 0;
+      width: 100%;
+    }
+    #init .sparkle.sparkleL {
+      top: 1em;
+      left: 0;
+      width: 0.834em;
+      white-space: break-spaces;
+    }
+    #init .sparkle.sparkleR {
+      top: 1em;
+      right: 0;
+      width: 0.834em;
+      white-space: break-spaces;
+      text-align: right;
+    }
+    
+    #intro {
+      background: var(--sky);
+      text-align: center;
+      display: none;
+      position: relative;
+    }
+    
+    #settings {
+      background: #000;
+      display: none;
+    }
+    
+    .gorilla {
+      color: var(--gorilla);
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      display: none;
+    }
+    .gorilla.show {
+      display: block;
+    }
+    .gorilla .head {
+      width: 14px;
+      height: 13px;
+      background: currentcolor;
+      border-radius: 4px;
+      top: 0;
+      left: 8px;
+      position: absolute;
+    }
+    .gorilla .head:before {
+      content: "";
+      position: absolute;
+      height: 2px;
+      width: 10px;
+      background: #000;
+      top: 3px;
+      left: 2px;
+    }
+    .gorilla .head:after {
+      content: "";
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      border-left: 3px solid #000;
+      border-right: 3px solid #000;
+      left: 3px;
+      top: 7px;
+    }
+    .gorilla .body {
+      position: absolute;
+      top: 13px;
+      background: currentcolor;
+      width: 26px;
+      height: 16px;
+      border-radius: 15% 15% 30% 30%;
+      left: 2px;
+    }
+    .gorilla .body:after, .gorilla .body:before {
+      content: "";
+      border-right: 4px solid var(--sky);
+      width: 12px;
+      height: 10px;
+      border-radius: 50%;
+      position: absolute;
+    }
+    .gorilla .body:before {
+      left: 1px;
+      transform: rotate(45deg) scalex(0.5) scaley(1.2);
+    }
+    .gorilla .body:after {
+      right: 1px;
+      transform: rotate(135deg) scalex(0.5) scaley(1.2);
+    }
+    .gorilla .arm {
+      position: absolute;
+      height: 16px;
+      top: 13px;
+    }
+    .gorilla .arm:after {
+      background: var(--sky);
+      width: 2px;
+      height: 10px;
+      content: "";
+      position: absolute;
+      top: 5px;
+      z-index: 100;
+      border-radius: 50%;
+    }
+    .gorilla .arm.armL {
+      border-left: 8px solid currentcolor;
+      left: -3px;
+      border-radius: 50% 0 0 50%;
+    }
+    .gorilla .arm.armL:after {
+      transform: rotate(-15deg);
+      left: -1px;
+    }
+    .gorilla .arm.armR {
+      border-right: 8px solid currentcolor;
+      right: -3px;
+      border-radius: 0 50% 50% 0;
+    }
+    .gorilla .arm.armR:after {
+      transform: rotate(15deg);
+      left: -2px;
+    }
+    .gorilla .legs {
+      position: absolute;
+      top: 28px;
+      left: 2px;
+      width: 26px;
+      height: 13px;
+      border-radius: 30%;
+      background: currentcolor;
+    }
+    .gorilla .legs:after {
+      content: "";
+      width: 14px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--sky);
+      position: absolute;
+      left: 6px;
+      top: 0;
+    }
+    .gorilla.armLeftUp .armL {
+      transform-origin: 0 0;
+      transform: scaleY(-1) translatey(-3px);
+    }
+    .gorilla.armRightUp .armR {
+      transform-origin: 0 0;
+      transform: scaleY(-1) translatey(-3px);
+    }
+    .gorilla:hover .arm {
+      transform-origin: 0 0;
+      transform: scaleY(-1) translatey(-3px);
+    }
+    
+    #banana {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border-left: 4px solid yellow;
+      position: absolute;
+      display: none;
+      -webkit-animation: 0.4s infinite linear;
+              animation: 0.4s infinite linear;
+      z-index: 100;
+      transition: 0.1s;
+      transform-origin: left center;
+    }
+    #banana.player1 {
+      -webkit-animation-name: banana1;
+              animation-name: banana1;
+    }
+    #banana.player2 {
+      -webkit-animation-name: banana2;
+              animation-name: banana2;
+    }
+    #banana:after, #banana:before {
+      content: "";
+      display: block;
+      position: absolute;
+      background: yellow;
+      width: 8px;
+      height: 4px;
+      border-radius: 50% 0 50% 50%;
+      left: -4px;
+    }
+    #banana:before {
+      transform: rotate(-45deg);
+      top: 0;
+    }
+    #banana:after {
+      transform: rotate(45deg);
+      bottom: 0;
+    }
+    
+    #arrow_wind {
+      width: 100px;
+      height: 1px;
+      background: red;
+      position: absolute;
+      left: 50%;
+      display: none;
+      bottom: 0.5em;
+      transform-origin: left center;
+    }
+    #arrow_wind:after {
+      content: ">";
+      position: absolute;
+      right: -4px;
+      top: -6px;
+      color: red;
+    }
+    #arrow_wind.left {
+      transform: scalex(-1);
+    }
+    
+    @-webkit-keyframes banana1 {
+      from {
+        transform: rotate(0);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    
+    @keyframes banana1 {
+      from {
+        transform: rotate(0);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    @-webkit-keyframes banana2 {
+      from {
+        transform: rotate(0);
+      }
+      to {
+        transform: rotate(-360deg);
+      }
+    }
+    @keyframes banana2 {
+      from {
+        transform: rotate(0);
+      }
+      to {
+        transform: rotate(-360deg);
+      }
+    }
+    #game {
+      background: var(--sky);
+      position: relative;
+      display: none;
+      width: 640px;
+      height: 350px;
+      overflow: hidden;
+    }
+    #game input {
+      background: none;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-family: Courier;
+      -moz-appearance: textfield;
+    }
+    #game input::-webkit-outer-spin-button, #game input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    #game .game_info_player {
+      position: absolute;
+      top: 0;
+      min-width: 150px;
+    }
+    #game .game_info_player.player1 {
+      left: 0;
+    }
+    #game .game_info_player.player2 {
+      right: 0;
+    }
+    #game .game_info_player#game_info_player {
+      top: 1em;
+    }
+    #game #sun {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--sun);
+      position: relative;
+    }
+    #game #sun:before {
+      width: 4px;
+      height: 4px;
+      display: block;
+      content: "";
+      border-left: 5px solid var(--sky);
+      border-right: 5px solid var(--sky);
+      z-index: 100;
+      position: absolute;
+      left: 30%;
+      width: 10%;
+      top: 30%;
+    }
+    #game #sun:after {
+      content: "";
+      display: block;
+      position: absolute;
+      left: 20%;
+      bottom: 20%;
+      width: 60%;
+      border-radius: 50%;
+      border-bottom: 2px solid var(--sky);
+      height: 30%;
+    }
+    #game #sun.hover:after, #game #sun:hover:after {
+      width: 20%;
+      border: 2px solid var(--sky);
+      background: var(--sky);
+      height: 10%;
+      width: 16%;
+      left: 36%;
+    }
+    #game #sun i {
+      position: absolute;
+      width: 1px;
+      height: 160%;
+      background: var(--sun);
+      left: calc(50% - 0.5px);
+      top: -30%;
+    }
+    #game #sun i:nth-child(1) {
+      transform: rotate(22.5deg);
+    }
+    #game #sun i:nth-child(2) {
+      transform: rotate(45deg);
+    }
+    #game #sun i:nth-child(3) {
+      transform: rotate(67.5deg);
+    }
+    #game #sun i:nth-child(4) {
+      transform: rotate(90deg);
+    }
+    #game #sun i:nth-child(5) {
+      transform: rotate(112.5deg);
+    }
+    #game #sun i:nth-child(6) {
+      transform: rotate(135deg);
+    }
+    #game #sun i:nth-child(7) {
+      transform: rotate(157.5deg);
+    }
+    #game #sun i:nth-child(8) {
+      transform: rotate(180deg);
+    }
+    #game .building {
+      width: 150px;
+      height: 300px;
+      position: absolute;
+      bottom: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      overflow: hidden;
+    }
+    #game .building i {
+      margin: 3px;
+      width: 4px;
+      height: 8px;
+      background: var(--window);
+    }
+    #game .building i.off {
+      background: var(--windowOff);
+    }
+    #game .explosion {
+      width: 15px;
+      height: 15px;
+      margin-left: -7.5px;
+      background: red;
+      border-radius: 50%;
+      position: absolute;
+      opacity: 0;
+      z-index: 100;
+    }
+    #game .explosion.start {
+      -webkit-animation: 1s explosion forwards;
+              animation: 1s explosion forwards;
+    }
+    #game .explosion2 {
+      width: 90px;
+      height: 60px;
+      margin-left: -45px;
+      margin-top: -55px;
+      background: red;
+      border-radius: 50%;
+      position: absolute;
+      opacity: 0;
+      background-image: radial-gradient(#ff0101, #fff700);
+      z-index: 100;
+    }
+    #game .explosion2.start {
+      -webkit-animation: 1s explosion forwards;
+              animation: 1s explosion forwards;
+    }
+    @-webkit-keyframes explosion {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+      30% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(0);
+        opacity: 1;
+      }
+    }
+    @keyframes explosion {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+      30% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(0);
+        opacity: 1;
+      }
+    }
+    #game .hole {
+      width: 15px;
+      height: 15px;
+      margin-left: -7.5px;
+      background: var(--sky);
+      border-radius: 50%;
+      position: absolute;
+      z-index: 99;
+      -webkit-animation: 0.5s hole forwards;
+              animation: 0.5s hole forwards;
+    }
+    @-webkit-keyframes hole {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    @keyframes hole {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    #game #score {
+      background: var(--sky);
+      text-align: center;
+      bottom: 2em;
+      position: absolute;
+      z-index: 100;
+      left: 285px;
+    }
+    
+    #info {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 640px;
+    }
+    
+    .hidden {
+      visibility: hidden;
+    }
+    
+    .show {
+      display: block !important;
+    }
+</style>
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<button id="start_game">RUN GORILLA.BAS 🦍</button>
+
+<div id="init">
+    <div class="sparkle sparkleT"></div>
+    <div class="sparkle sparkleB"></div>
+    <div class="sparkle sparkleL"></div>
+    <div class="sparkle sparkleR"></div>
+    <pre id="init_text"></pre>
+</div>
+
+<div id="settings">
+    <pre id="settings_write">
+    
+    
+    
+    
+    
+    
+               Name of Player 1 (Default = 'Player 1'): <span id="input_player1" contenteditable="true"></span>
+
+               <span id="info_input_player2">Name of Player 2 (Default = 'Player 2'): <span id="input_player2" contenteditable="true"></span></span>
+                             
+             <span id="info_input_points">Play to how many total points (Default = 3)? <span id="input_points" contenteditable="true"></span></span>
+
+                 <span id="info_input_gravity">Gravity in Meters/Sec (Earth = 9.8)? <span id="input_gravity" contenteditable="true"></span></span>
+                         
+                                 <span id="info_choice">--------------
+                                
+                                 V = View Intro
+                                 P = Play Game
+
+                                  Your Choice?  <span id="input_choice" contenteditable="true"></span>
+                         </span>
+</pre>
+    
+</div>
+
+<div id="intro">
+
+<pre>&nbsp;
+<b>Q B A S I C   G O R I L L A S</b>
+
+
+STARRING:
+
+<span id="intro_name_player1"></span> AND <span id="intro_name_player2"></span> 
+</pre>
+</div>
+
+<div id="game">
+    <div class="game_info_player player1" id="game_player_name1">Player 1</div>
+    <div class="game_info_player player2" id="game_player_name2">Player 2</div>
+    <div class="game_info_player" id="game_info_player">
+        <div id="game_player_angle_info">Angle: <input id="game_player_angle" type="number" step="1" min="0" max="360" maxlength="3"></div>
+        <div id="game_player_velocity_info" class="hidden">Velocity: <input id="game_player_velocity" type="number" step="1" min="0" max="999" maxlength="3"></div>
+    </div>
+    
+    
+    <div id="sun">
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+    </div>
+    <div id="banana"></div>
+    <div id="score">
+        <span id="score_player1">0</span>&gt;Score&lt;<span id="score_player2">0</span>
+    </div>
+    <div id="arrow_wind"></div>
+</div>
+
+<div id="info" class="hidden">
+    <span>Is gorilla: <span id="infoGorilla">No</span></span>
+    <span>Is sun: <span id="infoSun">No</span></span>
+    <span>Is building: <span id="infoBuilding">No</span></span>
+    <span>Is banana: <span id="infoBanana">No</span></span>
+    <span> X: <span id="infoX">0</span></span>
+    <span> Y: <span id="infoY">0</span></span>
+    <button id="start">Rebuild</button>
+</div>
+<!-- partial -->
+  <script>
+console.clear();
+      
+      const getRandomInt = (min, max) => {
+          min = Math.ceil(min);
+          max = Math.floor(max);
+          return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+      
+      class QBasicSound {
+      
+          constructor() {
+              this.octave     = 4;
+              this.noteLength = 4;
+              this.tempo      = 120;
+              this.mode       = 7 / 8;
+              this.foreground = true;
+              this.type       = 'square';
+          }
+      
+          setType(type) {
+              this.type = type;
+          }
+      
+          async playSound(frequency, duration) {
+              if (!this._audioContext) {
+                  this._audioContext = new AudioContext();
+              }
+              // a 0 frequency means a pause
+              if (frequency == 0) {
+                  await delay(duration);
+              } else {
+                  const o      = this._audioContext.createOscillator();
+                  const g      = this._audioContext.createGain();
+                  g.gain.value = 0.1;
+                  o.connect(g);
+                  g.connect(this._audioContext.destination);
+                  o.frequency.value = frequency;
+                  o.type            = this.type;
+                  o.start();
+                  await delay(duration);
+                  // slowly decrease the volume of the note instead of just stopping so that it doesn't click in an annoying way
+                  g.gain.exponentialRampToValueAtTime(0.00001, this._audioContext.currentTime + 0.1);
+              }
+          }
+      
+          getNoteValue(octave, note) {
+              const octaveNotes = 'C D EF G A B';
+              const index       = octaveNotes.indexOf(note.toUpperCase());
+              if (index < 0) {
+                  throw new Error(note + ' is not a valid note');
+              }
+              return octave * 12 + index;
+          }
+      
+          async playNote(octave, note, duration) {
+              const A4        = 440;
+              const noteValue = this.getNoteValue(octave, note);
+              const freq      = A4 * Math.pow(2, (noteValue - 48) / 12);
+              await this.playSound(freq, duration);
+          }
+      
+          async play(commandString) {
+              const reg   = /(?<octave>O\d+)|(?<octaveUp>>)|(?<octaveDown><)|(?<note>[A-G][#+-]?\d*\.?)|(?<noteN>N\d+\.?)|(?<length>L\d+)|(?<legato>ML)|(?<normal>MN)|(?<staccato>MS)|(?<pause>P\d+\.?)|(?<tempo>T\d+)|(?<foreground>MF)|(?<background>MB)/gi;
+              let match   = reg.exec(commandString);
+              let promise = Promise.resolve();
+              while (match) {
+                  let noteValue       = null;
+                  let longerNote      = false;
+                  let temporaryLength = 0;
+                  if (match.groups.octave) {
+                      this.octave = parseInt(match[0].substr(1)) + 1.2;
+                  }
+                  if (match.groups.octaveUp) {
+                      this.octave++;
+                  }
+                  if (match.groups.octaveDown) {
+                      this.octave--;
+                  }
+                  if (match.groups.note) {
+                      const noteMatch = /(?<note>[A-G])(?<suffix>[#+-]?)(?<shorthand>\d*)(?<longerNote>\.?)/i.exec(match[0]);
+                      if (noteMatch.groups.longerNote) {
+                          longerNote = true;
+                      }
+                      if (noteMatch.groups.shorthand) {
+                          temporaryLength = parseInt(noteMatch.groups.shorthand);
+                      }
+                      noteValue = this.getNoteValue(this.octave, noteMatch.groups.note);
+                      switch (noteMatch.groups.suffix) {
+                          case '#':
+                          case '+':
+                              noteValue++;
+                              break;
+                          case '-':
+                              noteValue--;
+                              break;
+                      }
+                  }
+                  if (match.groups.noteN) {
+                      const noteNMatch = /N(?<noteValue>\d+)(?<longerNote>\.?)/i.exec(match[0]);
+                      if (noteNMatch.groups.longerNote) {
+                          longerNote = true;
+                      }
+                      noteValue = parseInt(noteNMatch.groups.noteValue);
+                  }
+                  if (match.groups.length) {
+                      this.noteLength = parseInt(match[0].substr(1));
+                  }
+                  if (match.groups.legato) {
+                      this.mode = 1;
+                  }
+                  if (match.groups.normal) {
+                      this.mode = 7 / 8;
+                  }
+                  if (match.groups.staccato) {
+                      this.mode = 3 / 4;
+                  }
+                  if (match.groups.pause) {
+                      const pauseMatch = /P(?<length>\d+)(?<longerNote>\.?)/i.exec(match[0]);
+                      if (pauseMatch.groups.longerNote) {
+                          longerNote = true;
+                      }
+                      noteValue       = 0;
+                      temporaryLength = parseInt(pauseMatch.groups.length);
+                  }
+                  if (match.groups.tempo) {
+                      this.tempo = parseInt(match[0].substr(1)) / 2 * 3;
+                  }
+                  if (match.groups.foreground) {
+                      this.foreground = true;
+                  }
+                  if (match.groups.background) {
+                      this.foreground = false;
+                  }
+      
+                  if (noteValue !== null) {
+                      const noteDuration = this.mode * (60000 * 4 / this.tempo) * (longerNote ? 1 : 3 / 2);
+                      const duration     = temporaryLength
+                          ? noteDuration / temporaryLength
+                          : noteDuration / this.noteLength;
+                      const A4           = 440;
+                      const freq         = noteValue == 0
+                          ? 0
+                          : A4 * Math.pow(2, (noteValue - 48) / 12);
+                      const playPromise  = () => this.playSound(freq, duration);
+                      promise            = promise.then(playPromise)
+                  }
+                  match = reg.exec(commandString);
+              }
+              if (this.foreground) {
+                  await promise;
+              } else {
+                  promise;
+              }
+              return promise;
+          }
+      }
+      
+      function delay(duration) {
+          return new Promise(resolve => setTimeout(resolve, duration));
+      }
+      
+      const QBplayer = new QBasicSound();
+      
+      async function play(p) {
+          await QBplayer.play(p);
+      }
+      
+      class Gorilla {
+          constructor() {
+              this.el    = document.createElement('div');
+              this.head  = document.createElement('div');
+              this.larm  = document.createElement('div');
+              this.rarm  = document.createElement('div');
+              this.body  = document.createElement('div');
+              this.legs  = document.createElement('div');
+              this.score = 0;
+      
+              this.el.classList.add('gorilla');
+              this.head.classList.add('head');
+              this.larm.classList.add('arm', 'armL');
+              this.rarm.classList.add('arm', 'armR');
+              this.body.classList.add('body');
+              this.legs.classList.add('legs');
+      
+              this.el.appendChild(this.head);
+              this.el.appendChild(this.larm);
+              this.el.appendChild(this.rarm);
+              this.el.appendChild(this.body);
+              this.el.appendChild(this.legs);
+          }
+      
+          setPosition(x, y) {
+              this.x             = x;
+              this.y             = y;
+              this.el.style.left = (x - 15) + 'px';
+              this.el.style.top  = (y - 41) + 'px';
+          }
+      
+          show() {
+              this.el.classList.add('show');
+          }
+      
+          hide() {
+              this.el.classList.remove('show');
+          }
+      
+          armLeftUp() {
+              this.el.classList.add('armLeftUp');
+              return this;
+          }
+      
+          armLeftDown() {
+              this.el.classList.remove('armLeftUp');
+              return this;
+          }
+      
+          armRightUp() {
+              this.el.classList.add('armRightUp');
+              return this;
+          }
+      
+          armRightDown() {
+              this.el.classList.remove('armRightUp');
+              return this;
+          }
+      
+          armsDown() {
+              this.el.classList.remove('armLeftUp');
+              this.el.classList.remove('armRightUp');
+              return this;
+          }
+      
+      
+          isInside(x, y) {
+              return (x >= this.x - 20) && (x <= this.x + 20) && (y >= this.y - 41) && (y <= this.y);
+          }
+      
+          async dance() {
+              await play('MBO0L16EFGEFDC');
+              for (let i = 0; i < 4; i++) {
+                  this.armsDown().armLeftUp();
+                  await play('P16MFO0L32EFGEFDC');
+                  this.armsDown().armRightUp();
+                  await play('P16MFO0L32EFGEFDCP8');
+              }
+              this.armsDown();
+          }
+      
+          explode() {
+              let e = document.createElement('div');
+              e.classList.add('explosion2');
+              e.style.left = this.x + 'px';
+              e.style.top  = this.y + 'px';
+              this.el.parentNode.appendChild(e);
+              e.classList.add('start');
+          }
+      }
+      
+      class Building {
+          constructor(x, w, h, color, screenH) {
+              this.x     = x;
+              this.w     = w;
+              this.h     = h;
+              this.y     = screenH - this.h - 15;
+              this.color = color;
+              this.holes = [];
+              this.div   = document.createElement('div');
+              this.div.classList.add('building');
+              this.div.style.width           = w + 'px';
+              this.div.style.height          = h + 'px';
+              this.div.style.left            = x + 'px';
+              this.div.style.backgroundColor = color;
+      
+              for (let i = 0; i < (w * h) / 100; i++) {
+                  let i = document.createElement('i');
+                  if (Math.random() <= 0.25) i.classList.add('off');
+                  this.div.appendChild(i);
+              }
+      
+          }
+      
+          remove() {
+              this.div.remove();
+          }
+      
+          isInside(x, y) {
+              let inb = (x >= this.x) && (x <= (this.x + this.w)) && (y >= this.y);
+              if (!inb) return false;
+              let inside = true;
+              this.holes.forEach(h => {
+                  let i = x >= h[0] && x <= h[2] && y >= h[1] && y <= h[3];
+                  if (i) inside = false;
+              });
+      
+              return inside;
+      
+          }
+      
+          addHole(x, y) {
+              this.holes.push([x - 7.5, y - 7.5, x + 7.5, y + 7.5]);
+          }
+      }
+      
+      class Banana {
+          constructor() {
+              this.banana = document.getElementById('banana');
+              this.x      = 0;
+              this.y      = 0;
+          }
+      
+          player(p) {
+              this.banana.classList.value = '';
+              this.banana.classList.add('player' + p);
+          }
+      
+          setPosition(x, y) {
+              this.x                 = x;
+              this.y                 = y;
+              this.banana.style.left = x + 'px';
+              this.banana.style.top  = y + 'px';
+          }
+      
+          isInside(x, y) {
+              let b = this.boundary();
+              return x >= b[0] && x <= b[2] && y >= b[1] && y <= b[3];
+          }
+      
+          boundary() {
+              return [this.x, this.y - 2, this.x + 8, this.y + 10 + 2];
+          }
+      
+          hide() {
+              this.banana.classList.remove('show')
+          }
+      
+          show() {
+              this.banana.classList.add('show')
+          }
+      }
+      
+      class GorillaBas {
+          constructor() {
+              this.width   = 640;
+              this.height  = 350;
+              this.sunSize = 30;
+      
+              this.init     = document.getElementById('init');
+              this.settings = document.getElementById('settings');
+              this.intro    = document.getElementById('intro');
+              this.game     = document.getElementById('game');
+      
+              this.sun          = document.getElementById('sun');
+              this.infoX        = document.getElementById('infoX');
+              this.infoY        = document.getElementById('infoY');
+              this.infoSun      = document.getElementById('infoSun');
+              this.infoBuilding = document.getElementById('infoBuilding');
+              this.infoBanana   = document.getElementById('infoBanana');
+              this.infoGorilla  = document.getElementById('infoGorilla');
+      
+      
+              init.style.width      = this.width + 'px';
+              init.style.height     = this.height + 'px';
+              intro.style.width     = this.width + 'px';
+              intro.style.height    = this.height + 'px';
+              game.style.width      = this.width + 'px';
+              game.style.height     = this.height + 'px';
+              settings.style.width  = this.width + 'px';
+              settings.style.height = this.height + 'px';
+              sun.style.width       = this.sunSize + 'px';
+              sun.style.height      = this.sunSize + 'px';
+              sun.style.left        = ((this.width - this.sunSize) / 2) + 'px';
+              sun.style.top         = 30 + 'px';
+      
+              this.buildings = [];
+              this.gorilla1  = new Gorilla();
+              this.gorilla2  = new Gorilla();
+              this.banana    = new Banana();
+      
+              this.banana.setPosition(100, 100);
+      
+              this.game.appendChild(this.gorilla1.el);
+              this.game.appendChild(this.gorilla2.el);
+      
+      
+              this.input_player1 = document.getElementById('input_player1');
+              this.input_player2 = document.getElementById('input_player2');
+              this.input_points  = document.getElementById('input_points');
+              this.input_gravity = document.getElementById('input_gravity');
+              this.input_choice  = document.getElementById('input_choice');
+      
+              this.input_player1.innereText = '';
+              this.input_player2.innereText = '';
+              this.input_points.innereText  = '';
+              this.input_gravity.innereText = '';
+              this.input_choice.innereText  = '';
+      
+              this.player1 = 'Player 1';
+              this.player2 = 'Player 2';
+              this.points  = 3;
+              this.gravity = 9.8;
+      
+              this.info_input_player2 = document.getElementById('info_input_player2');
+              this.info_input_points  = document.getElementById('info_input_points');
+              this.info_input_gravity = document.getElementById('info_input_gravity');
+              this.info_choice        = document.getElementById('info_choice');
+      
+              this.info_input_player2.classList.add('hidden');
+              this.info_input_points.classList.add('hidden');
+              this.info_input_gravity.classList.add('hidden');
+              this.info_choice.classList.add('hidden');
+      
+      
+              document.getElementById('init_text').innerHTML = `
+      
+      
+      
+      <b>Q B a s i c    G O R I L L A S</b>
+      
+      Copyright (C) IBM Corporation 1991
+      
+      Your mission is to hit your opponent with the exploding
+      banana by varying the angle and power of your throw, taking
+      into account wind speed, gravity, and the city skyline.
+      The wind speed is shown by a directional arrow at the bottom
+      of the playing field, its length relative to its strength.
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      Press any key to continue
+      `
+              
+              this.init.addEventListener('click', e => {
+                  this.init.classList.remove('show');
+                  this.settings.classList.add('show');
+                  this.input_player1.focus();
+              });
+      
+              this.settings.addEventListener('keydown', e => {
+                  let t = e.target.innerText.trim();
+                  if (t.length > 20 && e.key !== 'Backspace') {
+                      e.preventDefault();
+                      return;
+                  }
+      
+                  if (e.target === this.input_choice) {
+                      this.gorilla1.score = 0;
+                      this.gorilla2.score = 0;
+                      t = e.key.toUpperCase();
+                      if (t === 'V') this.playIntro();
+                      else if (t === 'P') this.start();
+                      else e.preventDefault();
+                      return;
+                  }
+      
+                  if (e.key === 'Enter') {
+                      e.preventDefault();
+                      switch (e.target) {
+                          case this.input_player1:
+                              if (t) this.player1 = t;
+                              this.info_input_player2.classList.remove('hidden');
+                              this.input_player2.focus();
+                              break;
+                          case this.input_player2:
+                              if (t) this.player2 = t;
+                              this.info_input_points.classList.remove('hidden');
+                              this.input_points.focus();
+                              break;
+      
+                          case this.input_points:
+                              t = t === '' ? 3 : parseInt(t);
+                              if (t > 0 && t < 100) {
+                                  this.points = t;
+                                  this.info_input_gravity.classList.remove('hidden');
+                                  this.input_gravity.focus();
+                              }
+                              break;
+      
+                          case this.input_gravity:
+                              t = t === '' ? 9.8 : parseFloat(t);
+                              if (t > 0 && t < 100) {
+                                  this.gravity = t;
+                                  this.info_choice.classList.remove('hidden');
+                                  this.input_choice.focus();
+                              }
+                              break;
+      
+      
+                      }
+                  }
+              });
+      
+              this.game.addEventListener('mousemove', e => {
+                  let x                      = e.clientX - this.game.offsetLeft;
+                  let y                      = e.clientY - this.game.offsetTop
+                  this.infoX.innerText       = x;
+                  this.infoY.innerText       = y;
+                  this.infoSun.innerText     = this.isSun(x, y) ? 'Yes' : 'No';
+                  this.infoBanana.innerText  = this.banana.isInside(x, y) ? 'Yes' : 'No';
+                  this.infoGorilla.innerText = this.gorilla1.isInside(x, y) ? 1 : (this.gorilla2.isInside(x, y) ? 2 : 'No');
+      
+                  let isb = false;
+                  this.buildings.forEach((b, k) => {
+                      if (isb === false) isb = b.isInside(x, y) ? k : false;
+                  });
+                  this.infoBuilding.innerText = isb !== false ? isb : 'No';
+      
+              });
+      
+              document.getElementById('game_player_angle').addEventListener('keyup', e => {
+                  this.currentAngle = parseInt(e.target.value);
+                  if (!this.currentAngle) this.currentAngle = 0;
+                  if (this.currentAngle > 360) {
+                      this.currentAngle = 360;
+                      e.target.value    = 360;
+                  }
+                  if (e.key === 'Enter') {
+                      document.getElementById('game_player_velocity_info').classList.remove('hidden');
+                      document.getElementById('game_player_velocity').focus();
+                  }
+              });
+      
+              document.getElementById('game_player_velocity').addEventListener('keyup', e => {
+                  this.currentVelocity = parseInt(e.target.value);
+                  if (!this.currentVelocity) this.currentVelocity = 0;
+      
+                  if (this.currentVelocity > 999) {
+                      this.currentAngle = 999;
+                      e.target.value    = 999;
+                  }
+                  if (e.key === 'Enter') {
+                      document.getElementById('game_player_name1').classList.add('hidden');
+                      document.getElementById('game_player_name2').classList.add('hidden');
+                      document.getElementById('game_info_player').classList.add('hidden');
+                      this.launchBanana();
+                  }
+              });
+      
+      
+              let sparkleT = this.init.querySelector('.sparkleT');
+              let sparkleB = this.init.querySelector('.sparkleB');
+              let sparkleL = this.init.querySelector('.sparkleL');
+              let sparkleR = this.init.querySelector('.sparkleR');
+              let a        = '*    *    *    *    *    *    *    *    *    *    *    *    *    *    *    *    *    ';
+              let c        = 0;
+              setInterval(() => {
+                  sparkleT.innerHTML = a.substr(c, 80);
+                  sparkleB.innerHTML = a.substr(5 - c, 80);
+                  sparkleR.innerHTML = a.substr(c, 26).replace(/ /g, '<br>').replace('*', '*<br>');
+                  sparkleL.innerHTML = a.substr(5 - c, 26).replace(/ /g, '<br>').replace('*', '*<br>');
+                  c++;
+                  if (c === 5) c = 0;
+              }, 20);
+      
+      
+              init.classList.add('show');
+              play("MBT160O1L8CDEDCDL4ECC");
+      
+      
+              document.getElementById('start').addEventListener('click', e => {
+                  this.start();
+              });
+          }
+      
+          async playIntro() {
+              document.getElementById('intro_name_player1').innerText = this.player1;
+              document.getElementById('intro_name_player2').innerText = this.player2;
+      
+              this.intro.classList.add('show');
+              this.settings.classList.remove('show');
+      
+              let g1 = new Gorilla();
+              let g2 = new Gorilla();
+              this.intro.appendChild(g1.el);
+              this.intro.appendChild(g2.el);
+      
+              g1.setPosition(this.width * 0.4, 200)
+              g2.setPosition(this.width * 0.6, 200);
+              this.banana.setPosition(100, 100);
+      
+              g1.show();
+              g2.show();
+              await play('p5');
+      
+              g1.armsDown().armLeftUp();
+              g2.armsDown().armRightUp();
+      
+              await play('t120o1l16b9n0baan0bn0bn0baaan0b9n0baan0b');
+      
+              g1.armsDown().armRightUp();
+              g2.armsDown().armLeftUp();
+      
+              await play('o2l16e-9n0e-d-d-n0e-n0e-n0e-d-d-d-n0e-9n0e-d-d-n0e-');
+              g1.armsDown().armLeftUp();
+              g2.armsDown().armRightUp();
+              await play('o2l16g-9n0g-een0g-n0g-n0g-eeen0g-9n0g-een0g-');
+      
+              g1.armsDown().armRightUp();
+              g2.armsDown().armLeftUp();
+              await play('o2l16b9n0baan0g-n0g-n0g-eeen0o1b9n0baan0b');
+      
+              for (let i = 0; i < 4; i++) {
+                  g1.armsDown().armLeftUp();
+                  g2.armsDown().armRightUp();
+                  await play('T160O0L32EFGEFDC');
+                  g1.armsDown().armRightUp();
+                  g2.armsDown().armLeftUp();
+                  await play('T160O0L32EFGEFDC');
+              }
+      
+              this.start();
+      
+          }
+      
+          start() {
+              this.game.classList.add('show');
+              this.settings.classList.remove('show');
+              this.intro.classList.remove('show');
+      
+      
+              document.getElementById('game_player_name1').innerText = this.player1;
+              document.getElementById('game_player_name2').innerText = this.player2;
+      
+      
+              document.getElementById('score_player1').innerText = this.gorilla1.score;
+              document.getElementById('score_player2').innerText = this.gorilla2.score;
+              this.game.querySelectorAll('.explosion, .explosion2, .hole').forEach(e => e.remove());
+      
+              this.generateBuildings();
+              this.placeGorillas();
+      
+              this.wind = getRandomInt(-5, 5);
+              if (Math.random() < .33) this.wind += getRandomInt(1, 10) * (this.wind < 0 ? -1 : 1);
+              console.log(this.wind);
+              let aw = document.getElementById('arrow_wind');
+              if (this.wind !== 0) {
+                  aw.classList.add('show');
+                  let windPx = Math.abs(this.wind * 3 * this.width / 320);
+      
+                  aw.style.width = windPx + 'px';
+                  if (this.wind < 0) aw.classList.add('left');
+                  else aw.classList.remove('left');
+              } else {
+                  aw.classList.remove('show');
+              }
+      
+              this.turn(1);
+          }
+      
+          turn(player) {
+              this.currentPlayer = player;
+              this.banana.player(player);
+              this.banana.hide();
+              let otherPlayer = player === 1 ? 2 : 1;
+      
+              document.getElementById('game_player_angle').value    = '';
+              document.getElementById('game_player_velocity').value = '';
+      
+      
+              document.getElementById('game_player_name1').classList.remove('hidden');
+              document.getElementById('game_player_name2').classList.remove('hidden');
+              document.getElementById('game_info_player').classList.remove('hidden', 'player1', 'player2');
+              document.getElementById('game_info_player').classList.remove('hidden', 'player1', 'player2');
+              document.getElementById('game_info_player').classList.add('player' + player);
+      
+              document.getElementById('game_player_velocity_info').classList.add('hidden');
+              document.getElementById('game_player_angle').focus();
+          }
+      
+          placeGorillas() {
+              let p1 = getRandomInt(1, 2);
+              let p2 = this.buildings.length - getRandomInt(2, 3);
+              this.gorilla1.setPosition(this.buildings[p1].x + this.buildings[p1].w / 2, this.buildings[p1].y)
+              this.gorilla2.setPosition(this.buildings[p2].x + this.buildings[p2].w / 2, this.buildings[p2].y)
+              this.gorilla1.show();
+              this.gorilla2.show();
+          }
+      
+          generateBuildings() {
+      
+              this.buildings.forEach(b => {
+                  b.remove();
+              });
+              this.buildings = [];
+      
+              let x      = 2;
+              let NewHt;
+              let Slope  = getRandomInt(1, 6);
+              let colors = ['#00A8A8', '#A3A398', '#A10000'];
+              switch (Slope) {
+                  case 1:
+                      NewHt = 15;
+                      break;
+                  case 2:
+                      NewHt = 130;
+                      break;
+                  case 6:
+                      NewHt = 130;
+                      break;
+                  default:
+                      NewHt = 15;
+                      break;
+              }
+      
+              let HtInc        = 10;
+              let DefBWidth    = 37;
+              let RandomHeight = 120;
+              let WWidth       = 3;
+              let WHeight      = 6;
+              let WDifV        = 15;
+              let WDifh        = 10;
+              let GHeight      = 25;
+              let CurBuilding  = 1
+      
+              do {
+                  switch (Slope) {
+                      case 1:
+                          NewHt = NewHt + HtInc;
+                          break;
+                      case 2:
+                          NewHt = NewHt - HtInc;
+                          break;
+                      case 6 :
+                          if (x > (this.width / 2)) {
+                              NewHt = NewHt + 2 * HtInc;
+                          } else {
+                              NewHt = NewHt - 2 * HtInc;
+                          }
+                          break;
+                      default:
+                          if (x > this.width / 2) {
+                              NewHt = NewHt - 2 * HtInc;
+                          } else {
+                              NewHt = NewHt + 2 * HtInc
+                          }
+                  }
+      
+      
+                  let BWidth = getRandomInt(1, DefBWidth) + DefBWidth;
+                  if (x + BWidth > this.width) BWidth = this.width - x - 2
+      
+                  let BHeight = getRandomInt(1, RandomHeight) + NewHt;
+      
+                  if (BHeight < HtInc) BHeight = HtInc;
+                  let b = new Building(x, BWidth, BHeight, colors[Math.floor(Math.random() * colors.length)], this.height);
+                  this.buildings.push(b);
+                  this.game.appendChild(b.div);
+                  x = x + BWidth + 2;
+      
+      
+              } while (x < (this.width - HtInc));
+      
+      
+          }
+      
+          launchBanana() {
+              let p = this.currentPlayer;
+              let a = this.currentAngle;
+              let v = this.currentVelocity;
+              let g = this.gravity;
+              let w = this.wind;
+      
+              if (v < 2) {
+              } //hit self
+      
+              v = v / 5;
+      
+              v = v / 10;
+              g = g / 10;
+              w = w / 10;
+      
+              if (p === 2) a = 180 - a;
+      
+              a        = a / 180 * Math.PI;
+              let velX = Math.cos(a) * v;
+              let velY = Math.sin(a) * v;
+      
+      
+              let gorilla = p === 1 ? this.gorilla1 : this.gorilla2;
+      
+              if (p === 1) this.gorilla1.armLeftUp();
+              else this.gorilla2.armRightUp();
+              play('MBo0L32A-L64CL16BL64A+');
+      
+              let end = false;
+              this.banana.setPosition(gorilla.x + (14 * (p == 1 ? -1 : 1)), gorilla.y - 56);
+              this.banana.show();
+              setTimeout(() => this['gorilla' + p].armsDown(), 1000);
+      
+              let t         = 0;
+              let sunHover  = false;
+              let nextTurn  = () => {
+                  setTimeout(() => this.turn(p === 1 ? 2 : 1), 1000);
+              }
+              let intBanana = setInterval(() => {
+                  let x = this.banana.x + (velX) + (.5 * w * Math.pow(t, 2));
+                  let y = this.banana.y + ((-1 * velY) + (.5 * g * Math.pow(t, 2))) * (this.height / 350);
+      
+                  this.banana.setPosition(x, y);
+                  if (y > this.height) {
+                      this.banana.hide();
+                      clearInterval(intBanana);
+                      nextTurn();
+                  }
+      
+                  if (!sunHover && this.isSun(x, y)) {
+                      sunHover = true;
+                      document.getElementById('sun').classList.add('hover');
+                      setTimeout(() => {
+                          document.getElementById('sun').classList.remove('hover');
+                          sunHover = false;
+                      }, 1000);
+                  }
+      
+      
+                  let win = false;
+                  if (this.gorilla1.isInside(x, y)) win = 2;
+                  if (this.gorilla2.isInside(x, y)) win = 1;
+                  if (win) {
+                      clearInterval(intBanana);
+                      this.winPlayer(win);
+                      return;
+                  }
+      
+                  let isb = false;
+                  this.buildings.forEach((b, k) => {
+                      if (isb === false) isb = b.isInside(x, y) ? b : false;
+                  });
+                  if (isb !== false) {
+                      clearInterval(intBanana);
+                      isb.addHole(x, y);
+                      this.doExplosion(x, y);
+                      setTimeout(() => this.banana.hide(), 300);
+                      nextTurn();
+                      return;
+                  }
+      
+      
+                  t += .01;
+      
+      
+              }, 6);
+          }
+      
+          async winPlayer(player) {
+              let w = this['gorilla' + player];
+              let l = this['gorilla' + (player === 1 ? 2 : 1)];
+              w.score++;
+      
+              l.explode();
+              this.banana.hide();
+              setTimeout(() => l.hide(), 400);
+      
+              await w.dance();
+              this.start();
+              this.points--;
+              console.log('points', this.points);
+              if (this.points === 0){
+                  this.gameOver();
+              }
+              else{
+                  this.turn(player ? 2 : 1)
+              }
+          }
+      
+          doExplosion(x, y) {
+              play('MBO0L32EFGEFDC');
+              let e = document.createElement('div');
+              e.classList.add('explosion');
+              e.style.left = x + 'px';
+              e.style.top  = y + 'px';
+      
+              let h = document.createElement('div');
+              h.classList.add('hole');
+              h.style.left = x + 'px';
+              h.style.top  = y + 'px';
+      
+              this.game.appendChild(e);
+              this.game.appendChild(h);
+              e.classList.add('start');
+          }
+      
+          isSun(x, y) {
+              let l = this.width / 2 - this.sunSize / 2;
+              let r = l + this.sunSize;
+              let t = 30;
+              let b = t + this.sunSize;
+              return x >= l && x <= r && y >= t && y <= b;
+          }
+          
+          gameOver(){
+              this.game.classList.remove('show');
+              this.init.classList.add('show');
+              this.init.focus();
+              this.info_input_player2.classList.add('hidden');
+              this.info_input_points.classList.add('hidden');
+              this.info_input_gravity.classList.add('hidden');
+              this.info_choice.classList.add('hidden');
+      
+              document.getElementById('init_text').innerHTML = `&nbsp;
+              
+              
+              
+              
+              
+              
+      GAME OVER!
+      
+      Score:
+      
+      `+ this.player1+(' '.repeat(20-this.player1.length))+' '+this.gorilla1.score+`
+      `+ this.player2+(' '.repeat(20-this.player2.length))+' '+this.gorilla2.score+`
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      Press any key to restart
+      `;
+      
+          }
+      }
+      
+      document.getElementById('start_game').addEventListener('click', e => {
+          e.target.remove();
+          let p = new GorillaBas();
+      });
+  </script>
+
+</body>
+</html>
+
+
+
