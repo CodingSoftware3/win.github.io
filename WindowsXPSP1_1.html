@@ -1,0 +1,85 @@
+<style>
+@font-face {
+    font-family: 'Tahoma401';
+    src: url('https://github.com/CodingSoftware3/win.github.io/blob/main/windows-xp-tahoma.ttf') format('truetype');
+}
+body{
+  margin: 0;
+  background: url('https://raw.githubusercontent.com/urluur/minesweeper-js/main/img/bliss.jpg');
+ font-family: 'Source Sans Pro', sans-serif;
+  
+}
+.windows_xp{
+  width: 100vw;
+  height: 100vh;
+  background-image: url('https://i.imgur.com/yOpoaJH.jpg');
+  background-size: cover;
+  background-repeat:no-repeat;
+}
+.taskbar{
+  position: fixed;
+  bottom: 0;
+  background: linear-gradient(180deg,#0997ff,#0053ee 8%,#0050ee 40%,#06f 88%,#06f 93%,#005bff 95%,#003dd7 96%,#003dd7);
+  width: 100vw;
+  height: 30px;
+}
+
+.taskbar__start{
+  height: 100%;
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  font-style: italic;
+  border: none;
+  border-radius: 0px 10px 12px 0px;
+  box-shadow: 0px 5px 10px #79ce71 inset;
+  background: radial-gradient(circle, #5eac56 0%, #3c873c 100%) center/cover no-repeat;
+
+  display: flex;
+  align-items:center;
+}
+
+.time {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  font-family: 'Segoe UI Light', helvetica;
+}
+#ico1 {
+    margin-left: 15px;
+    margin-top: 5px;
+ font-family: 'Source Sans Pro', sans-serif;
+   }
+   #ico0 {
+       font-family: 'Tahoma401';
+   }
+</style>
+<div id="screen">
+ 
+ <div id="ico2"><img src="https://raw.githubusercontent.com/CodingSoftware3/win.github.io/main/125.ico" height="50" width="50" id="ico1" onclick="redirect()"><br>My Computer</div>
+  <div class="taskbar">
+    <button class="taskbar__start" onclick="button()"><img src="https://raw.githubusercontent.com/CodingSoftware3/win.github.io/main/IMG_0984.png" height="25" width="25"> <h1>  </h1>Start</button>
+  </div>
+</div>
+<div class="time" id="californiaTime"></div>
+<script>
+function redirect() {
+    window.location.href='https://google.com';
+}
+  function button() {
+    window.location.href='https://www.google.com/search?q=1998';
+  }
+
+  function updateTime() {
+    const options = { timeZone: 'America/Los_Angeles', hour12: true, hour: 'numeric', minute: 'numeric', second: 'numeric' };
+    const timeElement = document.getElementById('californiaTime');
+    const californiaTime = new Date().toLocaleString('en-US', options);
+    timeElement.textContent = californiaTime;
+  }
+
+  updateTime(); // Initial call to display time
+  setInterval(updateTime, 1000); // Update time every second
+</script>
